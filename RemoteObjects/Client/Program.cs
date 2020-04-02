@@ -9,7 +9,13 @@ namespace Client
         {
             Application.Init();
             MainWindow win = new MainWindow();
+            win.Title = "Client";
             win.Show();
+
+            ChatWindow chat = new ChatWindow();
+            chat.Title = "Chat with Amadeu";
+            chat.Show();
+
             Application.Run();
         }
     }
