@@ -1,12 +1,12 @@
 ﻿using System;
-namespace Client
+namespace Client.Windows
 {
-    public partial class ChatWindow : Gtk.Window
+    public partial class Auth : Gtk.Window
     {
-        public ChatWindow() :
+        public Auth() :
                 base(Gtk.WindowType.Toplevel)
         {
             this.Build();
         }
-    }
+   }
 }
