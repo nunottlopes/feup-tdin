@@ -1,12 +1,15 @@
 ﻿using System;
+using System.Runtime.Remoting;
 
 namespace Server
 {
-    class MainClass
+    class Server
     {
-        public static void Main(string[] args)
+        static void Main(string[] args)
         {
-            Console.WriteLine("Hello World!");
+            RemotingConfiguration.Configure("Server.exe.config", false);
+            Console.WriteLine("Press return to exit ----");
+            Console.ReadLine();
         }
     }
 }

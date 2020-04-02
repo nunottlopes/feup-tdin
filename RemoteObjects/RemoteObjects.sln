@@ -5,6 +5,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Server", "Server\Server.csp
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Client", "Client\Client.csproj", "{7FF89F30-FC02-40E5-9887-C476FDAD6D51}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common", "Common\Common.csproj", "{72555F05-382C-45E0-9132-945DDBC3B0BE}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|anycpu = Debug|anycpu
@@ -19,5 +21,43 @@ Global
 		{7FF89F30-FC02-40E5-9887-C476FDAD6D51}.Debug|anycpu.Build.0 = Debug|anycpu
 		{7FF89F30-FC02-40E5-9887-C476FDAD6D51}.Release|anycpu.ActiveCfg = Release|anycpu
 		{7FF89F30-FC02-40E5-9887-C476FDAD6D51}.Release|anycpu.Build.0 = Release|anycpu
+		{72555F05-382C-45E0-9132-945DDBC3B0BE}.Debug|anycpu.ActiveCfg = Debug|Any CPU
+		{72555F05-382C-45E0-9132-945DDBC3B0BE}.Debug|anycpu.Build.0 = Debug|Any CPU
+		{72555F05-382C-45E0-9132-945DDBC3B0BE}.Release|anycpu.ActiveCfg = Release|Any CPU
+		{72555F05-382C-45E0-9132-945DDBC3B0BE}.Release|anycpu.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(MonoDevelopProperties) = preSolution
+		Policies = $0
+		$0.DotNetNamingPolicy = $1
+		$1.DirectoryNamespaceAssociation = PrefixedHierarchical
+		$0.TextStylePolicy = $2
+		$2.scope = text/x-csharp
+		$2.FileWidth = 80
+		$2.TabsToSpaces = True
+		$0.CSharpFormattingPolicy = $3
+		$3.scope = text/x-csharp
+		$0.TextStylePolicy = $4
+		$4.FileWidth = 80
+		$4.TabsToSpaces = True
+		$4.scope = text/plain
+		$0.TextStylePolicy = $5
+		$5.inheritsSet = null
+		$5.scope = application/config+xml
+		$0.XmlFormattingPolicy = $6
+		$6.inheritsSet = null
+		$6.scope = application/config+xml
+		$0.TextStylePolicy = $7
+		$7.inheritsSet = null
+		$7.scope = application/xml
+		$0.XmlFormattingPolicy = $8
+		$8.scope = application/xml
+		$0.TextStylePolicy = $9
+		$9.inheritsSet = null
+		$9.scope = application/x-msbuild
+		$0.XmlFormattingPolicy = $10
+		$10.inheritsSet = null
+		$10.scope = application/x-msbuild
+		$0.StandardHeader = $11
+		$0.VersionControlPolicy = $12
 	EndGlobalSection
 EndGlobal
