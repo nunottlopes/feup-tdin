@@ -12,8 +12,11 @@ namespace Server
 
             DBManager.LoadFile();
 
-            Console.WriteLine("Press return to exit");
+            Console.WriteLine("[Server] Press return to exit");
             Console.ReadLine();
+
+            DBManager.SaveFile();
+
         }
     }
 }

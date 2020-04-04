@@ -5,14 +5,16 @@ namespace Server.Database
 {
     public class User
     {
-        private int Id { get; set; }
-        private string Username { get; set; }
-        private string Password { get; set; }
-        private string Name { get; set; }
+        static int MaxId = 0;
 
-        public User(int id, string username, string password, string name)
+        public int Id { get; set; }
+        public string Username { get; set; }
+        public string Password { get; set; }
+        public string Name { get; set; }
+
+        public User(string username, string password, string name)
         {
-            this.Id = id;
+            this.Id = ++MaxId;
             this.Username = username;
             this.Password = password;
             this.Name = name;
@@ -21,9 +23,18 @@ namespace Server.Database
         public User(XmlNode xmlNode)
         {
             this.Id = int.Parse(xmlNode.Attributes["id"].Value);
+            if (this.Id > MaxId) MaxId = this.Id; 
             this.Username = xmlNode.SelectSingleNode("username").InnerText;
             this.Password = xmlNode.SelectSingleNode("password").InnerText;
             this.Name = xmlNode.SelectSingleNode("name").InnerText;
+        }
+
+        public User(string username)
+        {
+            this.Id = -1;
+            this.Username = username;
+            this.Password = null;
+            this.Name = null;
         }
 
         public XmlNode ToXml(XmlDocument doc)
@@ -47,6 +58,36 @@ namespace Server.Database
             node.AppendChild(name);
 
             return node;
+        }
+
+        public override bool Equals(Object obj)
+        {
+            //Check for null and compare run-time types.
+            if ((obj == null) || !this.GetType().Equals(obj.GetType()))
+            {
+                return false;
+            }
+            else
+            {
+                User u = (User)obj;
+                return this.Username.Equals(u.Username);
+            }
+        }
+
+        public bool Equals(User other)
+        {
+            if (other == null) return false;
+            return (this.Username.Equals(other.Username));
+        }
+
+        public override int GetHashCode()
+        {
+            return base.GetHashCode();
+        }
+
+        public override string ToString()
+        {
+            return String.Format("[{0}] {1}:{2} - {3}", this.Id, this.Username, this.Password, this.Name);
         }
     }
 }
