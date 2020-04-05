@@ -4,7 +4,7 @@ namespace Client.Windows
     public class WindowManager
     {
         private static WindowManager instance;
-        private enum State { LOGIN, REGISTER };
+        private enum State { LOGIN, REGISTER, USERS };
         private State state;
 
         public static WindowManager getInstance()
@@ -19,12 +19,15 @@ namespace Client.Windows
 
         private Auth authWindow;
         private Register registerWindow;
+        private Users usersWindow;
 
         public WindowManager()
         {
             state = State.LOGIN;
-            authWindow = new Auth();
-            authWindow.Show();
+            //authWindow = new Auth();
+            //authWindow.Show();
+            usersWindow = new Users();
+            usersWindow.Show();
         }
 
         public void Register()
@@ -41,6 +44,17 @@ namespace Client.Windows
                 authWindow.Reset();
                 authWindow.Show();
                 state = State.LOGIN;
+            }
+        }
+
+        public void Login()
+        {
+            if(state == State.LOGIN)
+            {
+                authWindow.Destroy();
+                usersWindow = new Users();
+                usersWindow.Show();
+                state = State.USERS;
             }
         }
     }

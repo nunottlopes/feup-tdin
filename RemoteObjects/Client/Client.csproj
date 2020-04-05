@@ -65,6 +65,8 @@
     <Compile Include="ServerServices\AuthServer.cs" />
     <Compile Include="Windows\Register.cs" />
     <Compile Include="gtk-gui\Client.Windows.Register.cs" />
+    <Compile Include="Windows\Users.cs" />
+    <Compile Include="gtk-gui\Client.Windows.Users.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

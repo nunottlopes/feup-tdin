@@ -37,7 +37,7 @@ namespace Client.Windows
             else
             {
                 status.Text = "Login Successful";
-                //WindowManager.getInstance().Login();
+                WindowManager.getInstance().Login();
             }
         }
 
