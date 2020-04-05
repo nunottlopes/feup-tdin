@@ -46,9 +46,9 @@ namespace Client.Windows
             WindowManager.getInstance().Register();
         }
 
-        public void Reset(string un)
+        public void Reset()
         {
-            username.Text = un;
+            username.Text = "";
             password.Text = "";
             status.Text   = "";
         }
