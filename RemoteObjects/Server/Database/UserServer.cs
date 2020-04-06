@@ -68,7 +68,7 @@ namespace Server.Database
 
         public User GetUser()
         {
-            return new User(this.Username, this.Password);
+            return new User(this.Username, this.Name);
         }
 
         public override bool Equals(Object obj)
@@ -98,7 +98,7 @@ namespace Server.Database
 
         public override string ToString()
         {
-            return string.Format("[{0}] {1}:{2} ({3})", this.Id, this.Username, this.Password, this.Name);
+            return string.Format("[{0}] {1}:{2},{3} ({4})", this.Id, this.Username, this.Password, this.Name, this.Online);
         }
     }
 }

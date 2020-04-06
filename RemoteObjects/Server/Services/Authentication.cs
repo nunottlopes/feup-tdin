@@ -24,6 +24,12 @@ namespace Server.Services
                 return null;
             }
 
+            if(user.Online)
+            {
+                Console.WriteLine("[Login] User {0} is already online", username);
+                return null;
+            }
+
             user.Online = true;
             Console.WriteLine("[Login] User {0} successfully logged in", username);
             return user.GetUser();
@@ -62,10 +68,11 @@ namespace Server.Services
         {
             List<UserServer> online = DBManager.getOnline();
             List<User> ret = new List<User>();
-            foreach(UserServer u in ret)
+            foreach(UserServer u in online)
             {
                 ret.Add(u.GetUser());
             }
+
             return ret;
         }
     }
