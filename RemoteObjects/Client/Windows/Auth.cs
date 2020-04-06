@@ -1,5 +1,6 @@
 ﻿using System;
 using Client.ServerServices;
+using Common.Authentication;
 using Gtk;
 
 namespace Client.Windows
@@ -29,14 +30,15 @@ namespace Client.Windows
 
         protected void OnLoginClicked(object sender, EventArgs e)
         {
-            bool res = authServer.Login(username.Text, password.Text);
-            if(!res)
+            User res = authServer.Login(username.Text, password.Text);
+            if(res == null)
             {
                 status.Text = "Failed to Login";
             }
             else
             {
                 status.Text = "Login Successful";
+                Console.WriteLine("Login as {0}", res);
                 WindowManager.getInstance().Login();
             }
         }

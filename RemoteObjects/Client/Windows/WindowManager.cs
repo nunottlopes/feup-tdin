@@ -24,10 +24,10 @@ namespace Client.Windows
         public WindowManager()
         {
             state = State.LOGIN;
-            //authWindow = new Auth();
-            //authWindow.Show();
-            usersWindow = new Users();
-            usersWindow.Show();
+            authWindow = new Auth();
+            authWindow.Show();
+            //usersWindow = new Users();
+            //usersWindow.Show();
         }
 
         public void Register()

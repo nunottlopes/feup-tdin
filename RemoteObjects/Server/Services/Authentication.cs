@@ -6,26 +6,26 @@ namespace Server.Services
 {
     public class Authentication : MarshalByRefObject, IAuthentication
     {
-        public bool Login(string username, string password)
+        public User Login(string username, string password)
         {
             Console.WriteLine("[Login] {0}:{1}", username, password);
             if (!DBManager.hasUsername(username))
             {
                 Console.WriteLine("[Login] User {0} doesn't exist", username);
-                return false;
+                return null;
             }
 
-            User user = DBManager.Users.Find(obj => obj.Equals(new User(username)));
+            UserServer user = DBManager.Users.Find(obj => obj.Equals(new UserServer(username)));
 
             if(!user.Password.Equals(password))
             {
                 Console.WriteLine("[Login] User {0} wrong password", username);
-                return false;
+                return null;
             }
             
 
             Console.WriteLine("[Login] User {0} successfully logged in", username);
-            return true;
+            return user.GetUser();
         }
 
         public bool Logout(string username)
@@ -42,7 +42,7 @@ namespace Server.Services
                 return false;
             }
 
-            DBManager.Users.Add(new User(username, password, name));
+            DBManager.Users.Add(new UserServer(username, password, name));
             Console.WriteLine("[Register] User {0} successfully registered", username);
             return true;
         }

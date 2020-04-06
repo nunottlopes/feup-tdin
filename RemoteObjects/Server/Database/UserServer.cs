@@ -1,26 +1,27 @@
 ﻿using System;
 using System.Xml;
+using Common.Authentication;
 
 namespace Server.Database
 {
-    public class User
+    public class UserServer : User
     {
         static int MaxId = 0;
 
         public int Id { get; set; }
-        public string Username { get; set; }
+        //public string Username { get; set; }
         public string Password { get; set; }
-        public string Name { get; set; }
+        //public string Name { get; set; }
 
-        public User(string username, string password, string name)
+        public UserServer(string username, string password, string name) :
+            base(username, name)
         {
             this.Id = ++MaxId;
-            this.Username = username;
             this.Password = password;
-            this.Name = name;
         }
 
-        public User(XmlNode xmlNode)
+        public UserServer(XmlNode xmlNode) :
+            base("", "")
         {
             this.Id = int.Parse(xmlNode.Attributes["id"].Value);
             if (this.Id > MaxId) MaxId = this.Id; 
@@ -29,10 +30,11 @@ namespace Server.Database
             this.Name = xmlNode.SelectSingleNode("name").InnerText;
         }
 
-        public User(string username)
+        // Constructor for testing purposes
+        public UserServer(string username) :
+            base(username, "")
         {
             this.Id = -1;
-            this.Username = username;
             this.Password = null;
             this.Name = null;
         }
@@ -58,6 +60,11 @@ namespace Server.Database
             node.AppendChild(name);
 
             return node;
+        }
+
+        public User GetUser()
+        {
+            return new User(this.Username, this.Password);
         }
 
         public override bool Equals(Object obj)
@@ -87,7 +94,7 @@ namespace Server.Database
 
         public override string ToString()
         {
-            return String.Format("[{0}] {1}:{2} - {3}", this.Id, this.Username, this.Password, this.Name);
+            return string.Format("[{0}] {1}:{2} ({3})", this.Id, this.Username, this.Password, this.Name);
         }
     }
 }

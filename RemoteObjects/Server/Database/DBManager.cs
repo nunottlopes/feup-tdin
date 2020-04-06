@@ -9,7 +9,7 @@ namespace Server.Database
     {
         private static string FILENAME = "users.xml";
 
-        public static List<User> Users { get; set; }
+        public static List<UserServer> Users { get; set; }
 
         public static void SaveFile()
         {
@@ -18,7 +18,7 @@ namespace Server.Database
             XmlNode rootNode = doc.CreateElement("users");
             doc.AppendChild(rootNode);
 
-            foreach(User user in Users)
+            foreach(UserServer user in Users)
             {
                 XmlNode userNode = user.ToXml(doc);
                 rootNode.AppendChild(userNode);
@@ -30,7 +30,7 @@ namespace Server.Database
 
         public static bool hasUsername(string username)
         {
-            User temp = new User(username);
+            UserServer temp = new UserServer(username);
             return Users.Contains(temp);
         }
 
@@ -38,7 +38,7 @@ namespace Server.Database
         {
             if (!File.Exists(FILENAME))
             {
-                Users = new List<User>();
+                Users = new List<UserServer>();
                 Console.WriteLine("[DBManager] No users file found. Default action");
                 return;
             }
@@ -48,12 +48,12 @@ namespace Server.Database
             XmlDocument doc = new XmlDocument();
             doc.Load(FILENAME);
 
-            List<User> temp = new List<User>();
+            List<UserServer> temp = new List<UserServer>();
 
             XmlNodeList userNodes = doc.SelectNodes("//users/user");
             foreach(XmlNode userNode in userNodes)
             {
-                User user = new User(userNode);
+                UserServer user = new UserServer(userNode);
                 temp.Add(user);
             }
 

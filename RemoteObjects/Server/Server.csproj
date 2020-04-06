@@ -36,7 +36,7 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Database\DBManager.cs" />
-    <Compile Include="Database\User.cs" />
+    <Compile Include="Database\UserServer.cs" />
     <Compile Include="Services\Authentication.cs" />
   </ItemGroup>
   <ItemGroup>

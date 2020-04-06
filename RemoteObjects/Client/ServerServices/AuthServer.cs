@@ -13,7 +13,7 @@ namespace Client.ServerServices
             auth = (IAuthentication)RemotingServices.Connect(typeof(IAuthentication), "tcp://localhost:9000/Server/Auth");
         }
 
-        public bool Login(string username, string password)
+        public User Login(string username, string password)
         {
             return auth.Login(username, password);
         }
