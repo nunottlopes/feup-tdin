@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Common.Authentication;
 using Server.Database;
 
@@ -23,7 +24,7 @@ namespace Server.Services
                 return null;
             }
 
-            user.Login = true;
+            user.Online = true;
             Console.WriteLine("[Login] User {0} successfully logged in", username);
             return user.GetUser();
         }
@@ -32,13 +33,13 @@ namespace Server.Services
         {
             UserServer user = DBManager.GetUser(username);
 
-            if(!user.Login)
+            if(!user.Online)
             {
                 Console.WriteLine("[Logout] User {0} not logged in", username);
                 return false;
             }
 
-            user.Login = false;
+            user.Online = false;
             Console.WriteLine("[Logout] User {0} successfully logged out", username);
             return true;
         }
@@ -55,6 +56,17 @@ namespace Server.Services
             DBManager.Users.Add(new UserServer(username, password, name));
             Console.WriteLine("[Register] User {0} successfully registered", username);
             return true;
+        }
+
+        public List<User> GetOnline()
+        {
+            List<UserServer> online = DBManager.getOnline();
+            List<User> ret = new List<User>();
+            foreach(UserServer u in ret)
+            {
+                ret.Add(u.GetUser());
+            }
+            return ret;
         }
     }
 }

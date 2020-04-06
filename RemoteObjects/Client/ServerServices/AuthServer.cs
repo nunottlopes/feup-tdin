@@ -1,10 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Runtime.Remoting;
 using Common.Authentication;
 
 namespace Client.ServerServices
 {
-    public class AuthServer
+    public class AuthServer : IAuthentication
     {
         private IAuthentication auth;
 
@@ -23,9 +24,14 @@ namespace Client.ServerServices
             return auth.Register(username, name, password);
         }
 
-        public void Logout(string username)
+        public bool Logout(string username)
         {
-            auth.Logout(username);
+            return auth.Logout(username);
+        }
+
+        public List<User> GetOnline()
+        {
+            return auth.GetOnline();
         }
     }
 }

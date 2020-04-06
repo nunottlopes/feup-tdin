@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Xml;
+using Common.Authentication;
 
 namespace Server.Database
 {
@@ -65,6 +66,11 @@ namespace Server.Database
 
             Users = temp;
             Console.WriteLine("[DBManager] Users loaded");
+        }
+
+        public static List<UserServer> getOnline()
+        {
+            return Users.FindAll(u => u.Online);
         }
     }
 }
