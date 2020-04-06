@@ -30,16 +30,16 @@ namespace Client.Windows
 
         protected void OnLoginClicked(object sender, EventArgs e)
         {
-            User res = authServer.Login(username.Text, password.Text);
-            if(res == null)
+            User user = authServer.Login(username.Text, password.Text);
+            if(user == null)
             {
                 status.Text = "Failed to Login";
+                ResetPassword();
             }
             else
             {
                 status.Text = "Login Successful";
-                Console.WriteLine("Login as {0}", res);
-                WindowManager.getInstance().Login();
+                WindowManager.getInstance().Login(user);
             }
         }
 
@@ -53,6 +53,11 @@ namespace Client.Windows
             username.Text = "";
             password.Text = "";
             status.Text   = "";
+        }
+
+        public void ResetPassword()
+        {
+            password.Text = "";
         }
     }
 }

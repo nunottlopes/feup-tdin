@@ -36,7 +36,7 @@ namespace Client.Windows
 
 		private global::Gtk.HSeparator hseparator7;
 
-		private global::Gtk.Button button1;
+		private global::Gtk.Button logout;
 
 		protected virtual void Build()
 		{
@@ -181,13 +181,13 @@ namespace Client.Windows
 			w14.Expand = false;
 			w14.Fill = false;
 			// Container child vbox1.Gtk.Box+BoxChild
-			this.button1 = new global::Gtk.Button();
-			this.button1.CanFocus = true;
-			this.button1.Name = "button1";
-			this.button1.UseUnderline = true;
-			this.button1.Label = global::Mono.Unix.Catalog.GetString("Logout");
-			this.vbox1.Add(this.button1);
-			global::Gtk.Box.BoxChild w15 = ((global::Gtk.Box.BoxChild)(this.vbox1[this.button1]));
+			this.logout = new global::Gtk.Button();
+			this.logout.CanFocus = true;
+			this.logout.Name = "logout";
+			this.logout.UseUnderline = true;
+			this.logout.Label = global::Mono.Unix.Catalog.GetString("Logout");
+			this.vbox1.Add(this.logout);
+			global::Gtk.Box.BoxChild w15 = ((global::Gtk.Box.BoxChild)(this.vbox1[this.logout]));
 			w15.Position = 9;
 			w15.Expand = false;
 			w15.Fill = false;
@@ -200,6 +200,8 @@ namespace Client.Windows
 			this.DefaultWidth = 328;
 			this.DefaultHeight = 214;
 			this.Show();
+			this.DeleteEvent += new global::Gtk.DeleteEventHandler(this.OnDeleteEvent);
+			this.logout.Clicked += new global::System.EventHandler(this.OnLogoutClicked);
 		}
 	}
 }

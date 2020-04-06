@@ -11,6 +11,18 @@ namespace Server.Database
 
         public static List<UserServer> Users { get; set; }
 
+        public static bool hasUsername(string username)
+        {
+            UserServer temp = new UserServer(username);
+            return Users.Contains(temp);
+        }
+
+        public static UserServer GetUser(string username)
+        {
+            UserServer temp = new UserServer(username);
+            return Users.Find(u => u.Equals(temp));
+        }
+
         public static void SaveFile()
         {
             XmlDocument doc = new XmlDocument();
@@ -26,12 +38,6 @@ namespace Server.Database
 
             doc.Save(FILENAME);
             Console.WriteLine("[DBManager] Users saved");
-        }
-
-        public static bool hasUsername(string username)
-        {
-            UserServer temp = new UserServer(username);
-            return Users.Contains(temp);
         }
 
         public static void LoadFile()

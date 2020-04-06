@@ -1,4 +1,6 @@
 ﻿using System;
+using Common.Authentication;
+
 namespace Client.Windows
 {
     public class WindowManager
@@ -26,8 +28,6 @@ namespace Client.Windows
             state = State.LOGIN;
             authWindow = new Auth();
             authWindow.Show();
-            //usersWindow = new Users();
-            //usersWindow.Show();
         }
 
         public void Register()
@@ -47,12 +47,12 @@ namespace Client.Windows
             }
         }
 
-        public void Login()
+        public void Login(User user)
         {
             if(state == State.LOGIN)
             {
                 authWindow.Destroy();
-                usersWindow = new Users();
+                usersWindow = new Users(user);
                 usersWindow.Show();
                 state = State.USERS;
             }

@@ -15,22 +15,32 @@ namespace Server.Services
                 return null;
             }
 
-            UserServer user = DBManager.Users.Find(obj => obj.Equals(new UserServer(username)));
+            UserServer user = DBManager.GetUser(username);
 
             if(!user.Password.Equals(password))
             {
                 Console.WriteLine("[Login] User {0} wrong password", username);
                 return null;
             }
-            
 
+            user.Login = true;
             Console.WriteLine("[Login] User {0} successfully logged in", username);
             return user.GetUser();
         }
 
         public bool Logout(string username)
         {
-            throw new NotImplementedException();
+            UserServer user = DBManager.GetUser(username);
+
+            if(!user.Login)
+            {
+                Console.WriteLine("[Logout] User {0} not logged in", username);
+                return false;
+            }
+
+            user.Login = false;
+            Console.WriteLine("[Logout] User {0} successfully logged out", username);
+            return true;
         }
 
         public bool Register(string username, string name, string password)

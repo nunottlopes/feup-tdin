@@ -477,6 +477,7 @@
     <property name="MemberName" />
     <property name="Title" translatable="yes">Users</property>
     <property name="WindowPosition">CenterOnParent</property>
+    <signal name="DeleteEvent" handler="OnDeleteEvent" />
     <child>
       <widget class="Gtk.Alignment" id="alignment1">
         <property name="MemberName" />
@@ -658,12 +659,13 @@
               </packing>
             </child>
             <child>
-              <widget class="Gtk.Button" id="button1">
+              <widget class="Gtk.Button" id="logout">
                 <property name="MemberName" />
                 <property name="CanFocus">True</property>
                 <property name="Type">TextOnly</property>
                 <property name="Label" translatable="yes">Logout</property>
                 <property name="UseUnderline">True</property>
+                <signal name="Clicked" handler="OnLogoutClicked" />
               </widget>
               <packing>
                 <property name="Position">9</property>

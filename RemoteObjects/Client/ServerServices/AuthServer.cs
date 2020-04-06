@@ -25,7 +25,7 @@ namespace Client.ServerServices
 
         public void Logout(string username)
         {
-            throw new NotImplementedException();
+            auth.Logout(username);
         }
     }
 }

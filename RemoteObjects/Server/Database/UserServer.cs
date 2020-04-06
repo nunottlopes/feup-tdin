@@ -12,12 +12,14 @@ namespace Server.Database
         //public string Username { get; set; }
         public string Password { get; set; }
         //public string Name { get; set; }
+        public bool Login { get; set; }
 
         public UserServer(string username, string password, string name) :
             base(username, name)
         {
             this.Id = ++MaxId;
             this.Password = password;
+            this.Login = false;
         }
 
         public UserServer(XmlNode xmlNode) :
@@ -28,6 +30,7 @@ namespace Server.Database
             this.Username = xmlNode.SelectSingleNode("username").InnerText;
             this.Password = xmlNode.SelectSingleNode("password").InnerText;
             this.Name = xmlNode.SelectSingleNode("name").InnerText;
+            this.Login = false;
         }
 
         // Constructor for testing purposes
@@ -37,6 +40,7 @@ namespace Server.Database
             this.Id = -1;
             this.Password = null;
             this.Name = null;
+            this.Login = false;
         }
 
         public XmlNode ToXml(XmlDocument doc)
