@@ -435,7 +435,7 @@
                   </packing>
                 </child>
                 <child>
-                  <widget class="Gtk.Alignment" id="alignment4">
+                  <widget class="Gtk.Alignment" id="alignment3">
                     <property name="MemberName" />
                     <child>
                       <placeholder />

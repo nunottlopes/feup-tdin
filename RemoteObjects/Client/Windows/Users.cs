@@ -15,23 +15,16 @@ namespace Client.Windows
         public Users(User user) :
                 base(Gtk.WindowType.Toplevel)
         {
-            this.user = user;
-            authServer = new AuthServer();
-            online = authServer.GetOnline().FindAll(u => u.Username != user.Username);
-
+            Console.WriteLine("[Username] {0}", user.Username);
             this.Build();
+            this.user = user;
+
             this.Title = user.Username;
 
-            foreach(User u in online)
-            {
-                this.AddUserOnline(u);
-            }
+            authServer = new AuthServer();
+            authServer.AddOnlineHandler(new OnlineHandler(UpdateOnlineList));
 
-            //this.AddUserOnline(new User("amadeu", "Amadeu Pereira"));
-            //this.AddUserOnline(new User("nuno", "Nuno Lopes"));
-
-            //this.AddRequest(new User("amadeu", "Amadeu Pereira"));
-            //this.AddRequest(new User("nuno", "Nuno Lopes"));
+            UpdateOnlineList(authServer.GetOnline());
         }
 
         protected void OnDeleteEvent(object o, Gtk.DeleteEventArgs args)
@@ -59,6 +52,17 @@ namespace Client.Windows
             requestList.ShowAll();
         }
 
+        private void UpdateOnlineList(List<User> users)
+        {
+            online = users.FindAll(u => u.Username != user.Username);
+            userList.Forall(w => w.Destroy());
+
+            foreach (User u in online)
+            {
+                this.AddUserOnline(u);
+            }
+        }
+
         private global::Gtk.HBox GetOnlineGUI(User u)
         {
             global::Gtk.HBox user = new global::Gtk.HBox
@@ -68,7 +72,7 @@ namespace Client.Windows
             };
             global::Gtk.Label label = new global::Gtk.Label
             {
-                LabelProp = global::Mono.Unix.Catalog.GetString(u.Name)
+                LabelProp = global::Mono.Unix.Catalog.GetString(u.Username)
             };
             user.Add(label);
 
@@ -101,7 +105,7 @@ namespace Client.Windows
             // Container child request.Gtk.Box+BoxChild
             global::Gtk.Label label = new global::Gtk.Label
             {
-                LabelProp = global::Mono.Unix.Catalog.GetString(u.Name)
+                LabelProp = global::Mono.Unix.Catalog.GetString(u.Username)
             };
             request.Add(label);
 

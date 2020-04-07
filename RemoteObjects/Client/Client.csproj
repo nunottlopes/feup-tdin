@@ -49,6 +49,7 @@
       <SpecificVersion>False</SpecificVersion>
     </Reference>
     <Reference Include="Mono.Posix" />
+    <Reference Include="System.Runtime.Remoting" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="gtk-gui\gui.stetic">
@@ -67,6 +68,7 @@
     <Compile Include="gtk-gui\Client.Windows.Register.cs" />
     <Compile Include="Windows\Users.cs" />
     <Compile Include="gtk-gui\Client.Windows.Users.cs" />
+    <Compile Include="Utils\RemoteNew.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
@@ -80,6 +82,7 @@
   <ItemGroup>
     <Folder Include="Windows\" />
     <Folder Include="ServerServices\" />
+    <Folder Include="Utils\" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
 </Project>

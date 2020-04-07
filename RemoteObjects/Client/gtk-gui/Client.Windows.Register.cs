@@ -40,7 +40,7 @@ namespace Client.Windows
 
 		private global::Gtk.Alignment alignment2;
 
-		private global::Gtk.Alignment alignment4;
+		private global::Gtk.Alignment alignment3;
 
 		private global::Gtk.Button register;
 
@@ -155,6 +155,7 @@ namespace Client.Windows
 			this.password.CanFocus = true;
 			this.password.Name = "password";
 			this.password.IsEditable = true;
+			this.password.Visibility = false;
 			this.password.InvisibleChar = '●';
 			this.hbox9.Add(this.password);
 			global::Gtk.Box.BoxChild w10 = ((global::Gtk.Box.BoxChild)(this.hbox9[this.password]));
@@ -201,10 +202,10 @@ namespace Client.Windows
 			global::Gtk.Box.BoxChild w15 = ((global::Gtk.Box.BoxChild)(this.hbox11[this.alignment2]));
 			w15.Position = 1;
 			// Container child hbox11.Gtk.Box+BoxChild
-			this.alignment4 = new global::Gtk.Alignment(0.5F, 0.5F, 1F, 1F);
-			this.alignment4.Name = "alignment4";
-			this.hbox11.Add(this.alignment4);
-			global::Gtk.Box.BoxChild w16 = ((global::Gtk.Box.BoxChild)(this.hbox11[this.alignment4]));
+			this.alignment3 = new global::Gtk.Alignment(0.5F, 0.5F, 1F, 1F);
+			this.alignment3.Name = "alignment3";
+			this.hbox11.Add(this.alignment3);
+			global::Gtk.Box.BoxChild w16 = ((global::Gtk.Box.BoxChild)(this.hbox11[this.alignment3]));
 			w16.Position = 2;
 			// Container child hbox11.Gtk.Box+BoxChild
 			this.register = new global::Gtk.Button();

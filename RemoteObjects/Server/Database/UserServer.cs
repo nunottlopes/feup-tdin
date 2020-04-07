@@ -8,10 +8,9 @@ namespace Server.Database
     {
         static int MaxId = 0;
 
+        // Username, Name, Port from User
         public int Id { get; set; }
-        //public string Username { get; set; }
         public string Password { get; set; }
-        //public string Name { get; set; }
         public bool Online { get; set; }
 
         public UserServer(string username, string password, string name) :
@@ -20,6 +19,7 @@ namespace Server.Database
             this.Id = ++MaxId;
             this.Password = password;
             this.Online = false;
+            this.Port = -1;
         }
 
         public UserServer(XmlNode xmlNode) :
@@ -31,6 +31,7 @@ namespace Server.Database
             this.Password = xmlNode.SelectSingleNode("password").InnerText;
             this.Name = xmlNode.SelectSingleNode("name").InnerText;
             this.Online = false;
+            this.Port = -1;
         }
 
         // Constructor for testing purposes
@@ -41,6 +42,7 @@ namespace Server.Database
             this.Password = null;
             this.Name = null;
             this.Online = false;
+            this.Port = -1;
         }
 
         public XmlNode ToXml(XmlDocument doc)
@@ -68,7 +70,7 @@ namespace Server.Database
 
         public User GetUser()
         {
-            return new User(this.Username, this.Name);
+            return new User(this.Username, this.Name, this.Port);
         }
 
         public override bool Equals(Object obj)

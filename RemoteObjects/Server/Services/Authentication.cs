@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading;
 using Common.Authentication;
 using Server.Database;
 
@@ -7,7 +8,9 @@ namespace Server.Services
 {
     public class Authentication : MarshalByRefObject, IAuthentication
     {
-        public User Login(string username, string password)
+        public event OnlineHandler OnlineChanged;
+
+        public User Login(string username, string password, int port)
         {
             Console.WriteLine("[Login] {0}:{1}", username, password);
             if (!DBManager.hasUsername(username))
@@ -31,7 +34,11 @@ namespace Server.Services
             }
 
             user.Online = true;
+            user.Port = port;
             Console.WriteLine("[Login] User {0} successfully logged in", username);
+
+            OnLoginChange();
+
             return user.GetUser();
         }
 
@@ -47,6 +54,9 @@ namespace Server.Services
 
             user.Online = false;
             Console.WriteLine("[Logout] User {0} successfully logged out", username);
+
+            OnLoginChange();
+
             return true;
         }
 
@@ -74,6 +84,30 @@ namespace Server.Services
             }
 
             return ret;
+        }
+
+        private void OnLoginChange()
+        {
+            if (OnlineChanged != null)
+            {
+                Delegate[] invkList = OnlineChanged.GetInvocationList();
+                Console.WriteLine("[Authentication] Notifying {0} Clients", invkList.Length);
+
+                foreach (OnlineHandler handler in invkList)
+                {
+                    new Thread(() =>
+                    {
+                        try
+                        {
+                            handler(GetOnline());
+                        }
+                        catch (Exception)
+                        {
+                            OnlineChanged -= handler;
+                        }
+                    }).Start();
+                }
+            }
         }
     }
 }
