@@ -1,5 +1,6 @@
 ﻿using System;
 using Common.Authentication;
+using Common.Messages;
 
 namespace Client.Windows
 {
@@ -55,6 +56,14 @@ namespace Client.Windows
                 usersWindow = new Users(user);
                 usersWindow.Show();
                 state = State.USERS;
+            }
+        }
+
+        public void RequestReceived(User src, IRequestCallback callback)
+        {
+            if(state == State.USERS)
+            {
+                usersWindow.AddRequest(src, callback);
             }
         }
     }

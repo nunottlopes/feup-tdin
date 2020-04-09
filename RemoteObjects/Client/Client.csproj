@@ -69,6 +69,7 @@
     <Compile Include="Windows\Users.cs" />
     <Compile Include="gtk-gui\Client.Windows.Users.cs" />
     <Compile Include="Utils\RemoteNew.cs" />
+    <Compile Include="Services\Request.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
@@ -83,6 +84,7 @@
     <Folder Include="Windows\" />
     <Folder Include="ServerServices\" />
     <Folder Include="Utils\" />
+    <Folder Include="Services\" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
 </Project>

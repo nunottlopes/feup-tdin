@@ -49,8 +49,10 @@ namespace Client.ServerServices
         public bool Logout(string username)
         {
             if (Auth == null) return false;
-            UsersOnlineRepeater.OnlineChanged -= t1;
-            Auth.OnlineChanged -= t2;
+            if(t1 != null)
+                UsersOnlineRepeater.OnlineChanged -= t1;
+            if (t1 != null)
+                Auth.OnlineChanged -= t2;
             return Auth.Logout(username);
         }
 
