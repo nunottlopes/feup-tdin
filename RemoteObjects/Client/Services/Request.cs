@@ -9,21 +9,23 @@ namespace Client.Services
     {
         public void MakeRequest(User src, User dest, IRequestCallback callback)
         {
-            Console.WriteLine("[Request Received] {0}", src);
+            Console.WriteLine("[Request Received] {0}", src.Username);
             WindowManager.getInstance().RequestReceived(src, callback);
         }
     }
 
     public class RequestCallback : MarshalByRefObject, IRequestCallback
     {
-        public void Accepted()
+        public void Accepted(User user)
         {
-            Console.WriteLine("Accepted");
+            Console.WriteLine("[Request Accepted] {0}", user.Username);
+            WindowManager.getInstance().RequestAccepted(user);
         }
 
-        public void Refused()
+        public void Refused(User user)
         {
-            Console.WriteLine("Refused");
+            Console.WriteLine("[Request Refused] {0}", user.Username);
+            WindowManager.getInstance().RequestRefused(user);
         }
     }
 }

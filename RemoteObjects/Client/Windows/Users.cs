@@ -13,7 +13,8 @@ namespace Client.Windows
         private readonly User user;
         private readonly AuthServer authServer;
         private List<User> online;
-        private List<(User, IRequestCallback)> requests;
+        private List<(User, IRequestCallback)> requests; //Requests received
+        private List<User> requested; //Requests made
 
         public Users(User user) :
                 base(Gtk.WindowType.Toplevel)
@@ -22,6 +23,7 @@ namespace Client.Windows
             this.Build();
             this.online = new List<User>();
             this.requests = new List<(User, IRequestCallback)>();
+            this.requested = new List<User>();
 
             this.user = user;
 
@@ -49,23 +51,31 @@ namespace Client.Windows
         private void AddUserOnline(User user)
         {
             online.Add(user);
-            userList.Add(GetOnlineGUI(user));
-            userList.ShowAll();
+            Gtk.Application.Invoke(delegate
+            {
+                userList.Add(GetOnlineGUI(user));
+                userList.ShowAll();
+            });
         }
 
         public void AddRequest(User req, IRequestCallback callback)
         {
             requests.Add((req, callback));
-            Console.WriteLine(req);
-            requestList.Add(GetRequestGUI(req, callback));
-            requestList.ShowAll();
+            Gtk.Application.Invoke(delegate
+            {
+                requestList.Add(GetRequestGUI(req, callback));
+                requestList.ShowAll();
+            });
         }
 
         private void UpdateOnlineList(List<User> users)
         {
             // Update users online
             List<User> temp = users.FindAll(u => u.Username != user.Username);
-            userList.Forall(w => w.Destroy());
+            Gtk.Application.Invoke(delegate
+            {
+                userList.Forall(w => w.Destroy());
+            });
             online.Clear();
             foreach (User u in temp)
             {
@@ -73,8 +83,12 @@ namespace Client.Windows
             }
 
             // Remove offline users from requests
-            List<(User, IRequestCallback)> temp1 = requests.FindAll(e => temp.Contains(e.Item1));
-            requestList.Forall(w => w.Destroy());
+            if (requests.Count == 0) return;
+            List<(User, IRequestCallback)> temp1 = requests.FindAll(e => online.Contains(e.Item1));
+            Gtk.Application.Invoke(delegate
+            {
+                requestList.Forall(w => w.Destroy());
+            });
             requests.Clear();
             foreach ((User u, IRequestCallback cb) in temp1)
             {
@@ -98,12 +112,18 @@ namespace Client.Windows
             global::Gtk.Box.BoxChild bc1 = ((global::Gtk.Box.BoxChild)(user[label]));
             bc1.Position = 0;
 
+            string msg = "Message";
             global::Gtk.Button button = new global::Gtk.Button
             {
                 CanFocus = true,
                 UseUnderline = true,
-                Label = global::Mono.Unix.Catalog.GetString("Message")
             };
+            if(this.requested.Contains(u))
+            {
+                button.Sensitive = false;
+                msg = "Requested";
+            }
+            button.Label = global::Mono.Unix.Catalog.GetString(msg);
             button.Clicked += RequestMessageClicked;
             user.Add(button);
 
@@ -134,11 +154,15 @@ namespace Client.Windows
 
             IRequest request = (IRequest)Activator.GetObject(typeof(IRequest), url);
             request.MakeRequest(this.user, user, new RequestCallback());
+            requested.Add(user);
 
-            Console.WriteLine("[Request Sent] {1}", this.user, user);
+            Console.WriteLine("[Request Sent] {0}", user.Username);
 
-            ((Button)sender).Sensitive = false;
-            ((Button)sender).Label = global::Mono.Unix.Catalog.GetString("Requested");
+            Gtk.Application.Invoke(delegate
+            {
+                ((Button)sender).Sensitive = false;
+                ((Button)sender).Label = global::Mono.Unix.Catalog.GetString("Requested");
+            });
         }
 
         private global::Gtk.HBox GetRequestGUI(User u, IRequestCallback callback)
@@ -164,7 +188,12 @@ namespace Client.Windows
                 UseUnderline = true,
                 Label = global::Mono.Unix.Catalog.GetString("Accept")
             };
-            button1.Clicked += (s, e) => callback.Accepted();
+            button1.Clicked += (s, e) => {
+                request.Destroy();
+                requests.RemoveAll(t => t.Item1 == u);
+                callback.Accepted(this.user);
+                WindowManager.getInstance().RequestAccepted(u);
+            };
             request.Add(button1);
 
             global::Gtk.Box.BoxChild bc2 = ((global::Gtk.Box.BoxChild)(request[button1]));
@@ -179,7 +208,11 @@ namespace Client.Windows
                 UseUnderline = true,
                 Label = global::Mono.Unix.Catalog.GetString("Refuse")
             };
-            button2.Clicked += (s, e) => callback.Refused();
+            button2.Clicked += (s, e) => {
+                request.Destroy();
+                requests.RemoveAll(t => t.Item1 == u);
+                callback.Refused(this.user);
+            };
             request.Add(button2);
 
             global::Gtk.Box.BoxChild w6 = ((global::Gtk.Box.BoxChild)(request[button2]));

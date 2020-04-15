@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Common.Authentication;
 using Common.Messages;
 
@@ -23,11 +24,13 @@ namespace Client.Windows
         private Auth authWindow;
         private Register registerWindow;
         private Users usersWindow;
+        private List<Chat> chatWindows;
 
         public WindowManager()
         {
             state = State.LOGIN;
             authWindow = new Auth();
+
             authWindow.Show();
         }
 
@@ -55,6 +58,7 @@ namespace Client.Windows
                 authWindow.Destroy();
                 usersWindow = new Users(user);
                 usersWindow.Show();
+                chatWindows = new List<Chat>();
                 state = State.USERS;
             }
         }
@@ -65,6 +69,19 @@ namespace Client.Windows
             {
                 usersWindow.AddRequest(src, callback);
             }
+        }
+
+        public void RequestAccepted(User user)
+        {
+            Console.WriteLine("[Chatting] {0}", user.Username);
+            //Chat chat = new Chat(user);
+            //chatWindows.Add(chat);
+            //chat.Show();
+        }
+
+        public void RequestRefused(User user)
+        {
+            
         }
     }
 }
