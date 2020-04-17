@@ -35,6 +35,29 @@ namespace Client.Windows
             UpdateOnlineList(authServer.GetOnline());
         }
 
+        public void PrintState()
+        {
+            Console.WriteLine("--------Start---------");
+            if (this.requests.Count != 0)
+            {
+                Console.WriteLine("[Requests List]");
+                foreach (var item in this.requests)
+                {
+                    Console.WriteLine("> " + item.Item1.Username);
+                }
+            }
+
+            if (this.requested.Count != 0)
+            {
+                Console.WriteLine("[Resquested List]");
+                foreach (var user in this.requested)
+                {
+                    Console.WriteLine("> " + user.Username);
+                }
+            }
+            Console.WriteLine("---------End----------");
+        }
+
         protected void OnDeleteEvent(object o, Gtk.DeleteEventArgs args)
         {
             authServer.Logout(user.Username);
@@ -94,6 +117,8 @@ namespace Client.Windows
             {
                 this.AddRequest(u, cb);
             }
+
+            this.PrintState();
         }
 
         private global::Gtk.HBox GetOnlineGUI(User u)
