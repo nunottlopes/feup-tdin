@@ -12,7 +12,7 @@ namespace Client.Services
 
         public void Exit()
         {
-
+            Console.WriteLine("[Chat] Exit");
         }
     }
 }

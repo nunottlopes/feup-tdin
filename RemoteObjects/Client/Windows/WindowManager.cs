@@ -29,9 +29,10 @@ namespace Client.Windows
         public WindowManager()
         {
             state = State.LOGIN;
-            authWindow = new Auth();
+            //authWindow = new Auth();
 
-            authWindow.Show();
+            //authWindow.Show();
+            new Chat().Show();
         }
 
         public void Register()
