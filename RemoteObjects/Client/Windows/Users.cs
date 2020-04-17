@@ -55,6 +55,15 @@ namespace Client.Windows
                     Console.WriteLine("> " + user.Username);
                 }
             }
+
+            //if (this.chats.Count != 0)
+            //{
+            //    Console.WriteLine("[Chatting List]");
+            //    foreach (var chat in this.chats)
+            //    {
+            //        Console.WriteLine("> " + chat.GetDestUser().Username);
+            //    }
+            //}
             Console.WriteLine("---------End----------");
         }
 
@@ -143,11 +152,15 @@ namespace Client.Windows
                 CanFocus = true,
                 UseUnderline = true,
             };
-            if(this.requested.Contains(u) ||
-               this.requests.Exists(e => e.Item1.Username == u.Username))
+            if(this.requested.Contains(u))
             {
                 button.Sensitive = false;
                 msg = "Requested";
+            }
+            else if (this.requests.Exists(e => e.Item1.Username == u.Username))
+            {
+                button.Sensitive = false;
+                msg = "Request";
             }
 
             button.Label = global::Mono.Unix.Catalog.GetString(msg);

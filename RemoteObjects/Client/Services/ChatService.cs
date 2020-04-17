@@ -9,5 +9,10 @@ namespace Client.Services
         {
             Console.WriteLine("[Message from {0}] {1}", message.src.Username, message.content);
         }
+
+        public void Exit()
+        {
+
+        }
     }
 }

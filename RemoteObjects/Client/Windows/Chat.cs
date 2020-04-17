@@ -27,6 +27,12 @@ namespace Client.Windows
 
         protected void OnDeleteEvent(object o, Gtk.DeleteEventArgs args)
         {
+
+        }
+
+        public User GetDestUser()
+        {
+            return this.dest;
         }
 
         protected void OnSendClicked(object sender, EventArgs e)
