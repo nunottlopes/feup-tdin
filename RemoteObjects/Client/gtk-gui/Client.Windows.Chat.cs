@@ -16,7 +16,7 @@ namespace Client.Windows
 
 		private global::Gtk.Entry message;
 
-		private global::Gtk.Button button1;
+		private global::Gtk.Button send;
 
 		protected virtual void Build()
 		{
@@ -65,13 +65,13 @@ namespace Client.Windows
 			global::Gtk.Box.BoxChild w3 = ((global::Gtk.Box.BoxChild)(this.hbox1[this.message]));
 			w3.Position = 0;
 			// Container child hbox1.Gtk.Box+BoxChild
-			this.button1 = new global::Gtk.Button();
-			this.button1.CanFocus = true;
-			this.button1.Name = "button1";
-			this.button1.UseUnderline = true;
-			this.button1.Label = global::Mono.Unix.Catalog.GetString("Send");
-			this.hbox1.Add(this.button1);
-			global::Gtk.Box.BoxChild w4 = ((global::Gtk.Box.BoxChild)(this.hbox1[this.button1]));
+			this.send = new global::Gtk.Button();
+			this.send.CanFocus = true;
+			this.send.Name = "send";
+			this.send.UseUnderline = true;
+			this.send.Label = global::Mono.Unix.Catalog.GetString("Send");
+			this.hbox1.Add(this.send);
+			global::Gtk.Box.BoxChild w4 = ((global::Gtk.Box.BoxChild)(this.hbox1[this.send]));
 			w4.Position = 1;
 			w4.Expand = false;
 			w4.Fill = false;
@@ -89,6 +89,7 @@ namespace Client.Windows
 			this.DefaultWidth = 387;
 			this.DefaultHeight = 366;
 			this.Show();
+			this.send.Clicked += new global::System.EventHandler(this.OnSendClicked);
 		}
 	}
 }

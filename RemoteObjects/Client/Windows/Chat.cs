@@ -15,5 +15,10 @@ namespace Client.Windows
             this.Build();
             this.Title = u.Username;
         }
+
+        protected void OnSendClicked(object sender, EventArgs e)
+        {
+
+        }
     }
 }

@@ -669,12 +669,13 @@
                   </packing>
                 </child>
                 <child>
-                  <widget class="Gtk.Button" id="button1">
+                  <widget class="Gtk.Button" id="send">
                     <property name="MemberName" />
                     <property name="CanFocus">True</property>
                     <property name="Type">TextOnly</property>
                     <property name="Label" translatable="yes">Send</property>
                     <property name="UseUnderline">True</property>
+                    <signal name="Clicked" handler="OnSendClicked" />
                   </widget>
                   <packing>
                     <property name="Position">1</property>
