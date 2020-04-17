@@ -80,6 +80,7 @@ namespace Client.Windows
             {
                 Chat chat = new Chat(user);
                 chatWindows.Add(chat);
+                usersWindow.AddChat(chat);
                 chat.Show();
             });
         }

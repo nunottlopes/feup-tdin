@@ -16,6 +16,11 @@ namespace Client.Windows
             this.Title = u.Username;
         }
 
+        public User GetUser()
+        {
+            return this.user;
+        }
+
         protected void OnSendClicked(object sender, EventArgs e)
         {
 

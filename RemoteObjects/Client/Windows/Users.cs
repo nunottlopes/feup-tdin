@@ -15,6 +15,7 @@ namespace Client.Windows
         private List<User> online;
         private List<(User, IRequestCallback)> requests; //Requests received
         private List<User> requested; //Requests made
+        private List<Chat> chats; //Open chats
 
         public Users(User user) :
                 base(Gtk.WindowType.Toplevel)
@@ -24,6 +25,7 @@ namespace Client.Windows
             this.online = new List<User>();
             this.requests = new List<(User, IRequestCallback)>();
             this.requested = new List<User>();
+            this.chats = new List<Chat>();
 
             this.user = user;
 
@@ -53,6 +55,15 @@ namespace Client.Windows
                 foreach (var user in this.requested)
                 {
                     Console.WriteLine("> " + user.Username);
+                }
+            }
+
+            if (this.chats.Count != 0)
+            {
+                Console.WriteLine("[Chatting List]");
+                foreach (var chat in this.chats)
+                {
+                    Console.WriteLine("> " + chat.GetUser().Username);
                 }
             }
             Console.WriteLine("---------End----------");
@@ -143,11 +154,15 @@ namespace Client.Windows
                 CanFocus = true,
                 UseUnderline = true,
             };
-            if(this.requested.Contains(u) ||
-               this.requests.Exists(e => e.Item1.Username == u.Username))
+            if(this.requested.Contains(u))
             {
                 button.Sensitive = false;
                 msg = "Requested";
+            }
+            else if (this.requests.Exists(e => e.Item1.Username == u.Username))
+            {
+                button.Sensitive = false;
+                msg = "Request";
             }
 
             button.Label = global::Mono.Unix.Catalog.GetString(msg);
@@ -261,6 +276,16 @@ namespace Client.Windows
         public void Refresh()
         {
             UpdateOnlineList(online);
+        }
+
+        public void AddChat(Chat chat)
+        {
+            this.chats.Add(chat);
+        }
+
+        public void RemoveChat(Chat chat)
+        {
+            this.chats.Remove(chat);
         }
     }
 }
