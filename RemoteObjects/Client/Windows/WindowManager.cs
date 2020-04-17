@@ -72,21 +72,21 @@ namespace Client.Windows
             }
         }
 
-        public void RequestAccepted(User user)
+        public void RequestAccepted(User src, User dest)
         {
-            Console.WriteLine("[Chatting] {0}", user.Username);
-            usersWindow.RemoveRequested(user);
+            Console.WriteLine("[Chatting] {0}", dest.Username);
+            usersWindow.RemoveRequested(dest);
             Gtk.Application.Invoke(delegate
             {
-                Chat chat = new Chat(user);
+                Chat chat = new Chat(src, dest);
                 chatWindows.Add(chat);
                 chat.Show();
             });
         }
 
-        public void RequestRefused(User user)
+        public void RequestRefused(User src, User dest)
         {
-            usersWindow.RemoveRequested(user);
+            usersWindow.RemoveRequested(dest);
         }
     }
 }

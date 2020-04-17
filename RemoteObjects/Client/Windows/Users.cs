@@ -218,8 +218,8 @@ namespace Client.Windows
             button1.Clicked += (s, e) => {
                 request.Destroy();
                 requests.RemoveAll(t => t.Item1.Equals(u));
-                callback.Accepted(this.user);
-                WindowManager.getInstance().RequestAccepted(u);
+                callback.Accepted(u, this.user);
+                WindowManager.getInstance().RequestAccepted(this.user, u);
                 Refresh();
             };
             request.Add(button1);
@@ -239,7 +239,7 @@ namespace Client.Windows
             button2.Clicked += (s, e) => {
                 request.Destroy();
                 requests.RemoveAll(t => t.Item1.Equals(u));
-                callback.Refused(this.user);
+                callback.Refused(u, this.user);
                 Refresh();
             };
             request.Add(button2);

@@ -89,6 +89,7 @@ namespace Client.Windows
 			this.DefaultWidth = 387;
 			this.DefaultHeight = 366;
 			this.Show();
+			this.DeleteEvent += new global::Gtk.DeleteEventHandler(this.OnDeleteEvent);
 			this.send.Clicked += new global::System.EventHandler(this.OnSendClicked);
 		}
 	}

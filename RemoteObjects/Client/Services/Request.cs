@@ -16,16 +16,16 @@ namespace Client.Services
 
     public class RequestCallback : MarshalByRefObject, IRequestCallback
     {
-        public void Accepted(User user)
+        public void Accepted(User src, User dest)
         {
-            Console.WriteLine("[Request Accepted] {0}", user.Username);
-            WindowManager.getInstance().RequestAccepted(user);
+            Console.WriteLine("[Request Accepted] {0}", dest.Username);
+            WindowManager.getInstance().RequestAccepted(src, dest);
         }
 
-        public void Refused(User user)
+        public void Refused(User src, User dest)
         {
-            Console.WriteLine("[Request Refused] {0}", user.Username);
-            WindowManager.getInstance().RequestRefused(user);
+            Console.WriteLine("[Request Refused] {0}", dest.Username);
+            WindowManager.getInstance().RequestRefused(src, dest);
         }
     }
 }

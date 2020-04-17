@@ -10,7 +10,7 @@ namespace Common.Messages
 
     public interface IRequestCallback
     {
-        void Accepted(User user);
-        void Refused(User user);
+        void Accepted(User src, User dest);
+        void Refused(User src, User dest);
     }
 }
