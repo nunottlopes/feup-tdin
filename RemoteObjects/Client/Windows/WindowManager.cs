@@ -68,20 +68,25 @@ namespace Client.Windows
             if(state == State.USERS)
             {
                 usersWindow.AddRequest(src, callback);
+                usersWindow.Refresh();
             }
         }
 
         public void RequestAccepted(User user)
         {
             Console.WriteLine("[Chatting] {0}", user.Username);
-            //Chat chat = new Chat(user);
-            //chatWindows.Add(chat);
-            //chat.Show();
+            usersWindow.RemoveRequested(user);
+            Gtk.Application.Invoke(delegate
+            {
+                Chat chat = new Chat(user);
+                chatWindows.Add(chat);
+                chat.Show();
+            });
         }
 
         public void RequestRefused(User user)
         {
-            
+            usersWindow.RemoveRequested(user);
         }
     }
 }

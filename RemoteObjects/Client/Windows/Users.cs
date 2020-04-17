@@ -118,11 +118,13 @@ namespace Client.Windows
                 CanFocus = true,
                 UseUnderline = true,
             };
-            if(this.requested.Contains(u))
+            if(this.requested.Contains(u) ||
+               this.requests.Exists(e => e.Item1.Username == u.Username))
             {
                 button.Sensitive = false;
                 msg = "Requested";
             }
+
             button.Label = global::Mono.Unix.Catalog.GetString(msg);
             button.Clicked += RequestMessageClicked;
             user.Add(button);
@@ -190,9 +192,10 @@ namespace Client.Windows
             };
             button1.Clicked += (s, e) => {
                 request.Destroy();
-                requests.RemoveAll(t => t.Item1 == u);
+                requests.RemoveAll(t => t.Item1.Equals(u));
                 callback.Accepted(this.user);
                 WindowManager.getInstance().RequestAccepted(u);
+                Refresh();
             };
             request.Add(button1);
 
@@ -210,8 +213,9 @@ namespace Client.Windows
             };
             button2.Clicked += (s, e) => {
                 request.Destroy();
-                requests.RemoveAll(t => t.Item1 == u);
+                requests.RemoveAll(t => t.Item1.Equals(u));
                 callback.Refused(this.user);
+                Refresh();
             };
             request.Add(button2);
 
@@ -221,6 +225,17 @@ namespace Client.Windows
             w6.Fill = false;
 
             return request;
+        }
+
+        public void RemoveRequested(User u)
+        {
+            requested.RemoveAll(e => e.Equals(u));
+            Refresh();
+        }
+
+        public void Refresh()
+        {
+            UpdateOnlineList(online);
         }
     }
 }
