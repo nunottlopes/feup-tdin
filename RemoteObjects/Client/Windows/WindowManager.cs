@@ -24,7 +24,7 @@ namespace Client.Windows
         private Auth authWindow;
         private Register registerWindow;
         private Users usersWindow;
-        private Dictionary<string, Chat> chatWindows;
+        private Dictionary<Guid, Chat> chatWindows;
 
         public WindowManager()
         {
@@ -56,7 +56,7 @@ namespace Client.Windows
             if(state == State.LOGIN)
             {
                 authWindow.Destroy();
-                chatWindows = new Dictionary<string, Chat>();
+                chatWindows = new Dictionary<Guid, Chat>();
                 usersWindow = new Users(user);
                 usersWindow.Show();
                 state = State.USERS;
@@ -72,15 +72,14 @@ namespace Client.Windows
             }
         }
 
-        public void RequestAccepted(User src, User dest)
+        public void RequestAccepted(Guid guid, User src, User dest)
         {
             Console.WriteLine("[Chatting] {0}", dest.Username);
             usersWindow.RemoveRequested(dest);
             Gtk.Application.Invoke(delegate
             {
-                //Chat chat = new Chat(src, dest);
-                Chat chat = new Chat(src, dest);
-                chatWindows.Add(dest.Username, chat);
+                Chat chat = new Chat(guid, src, dest);
+                chatWindows.Add(guid, chat);
                 chat.Show();
             }); 
         }
@@ -92,33 +91,34 @@ namespace Client.Windows
 
         public void MessageReceived(Message msg)
         {
-            chatWindows[msg.src.Username].AddMessage(msg);
+            chatWindows[msg.guid].AddMessage(msg);
         }
 
-        public void LeaveChat(User u)
+        public void LeaveChat(Guid guid)
         {
-            Console.WriteLine("[Leave Chat] {0}", u.Username);
+            Console.WriteLine("[Leave Chat] {0}", guid);
             Gtk.Application.Invoke(delegate
             {
-                chatWindows[u.Username].Destroy();
-                chatWindows.Remove(u.Username);
+                chatWindows[guid].Destroy();
+                chatWindows.Remove(guid);
             });
+        }
+
+        internal void LeaveChat(Guid guid, User src)
+        {
+            chatWindows[guid].RemoveUser(src);
         }
 
         public void RemoveOfflineChats(List<User> users)
         {
-            foreach (KeyValuePair<string, Chat> pair in chatWindows)
+            foreach (KeyValuePair<Guid, Chat> pair in chatWindows)
             {
-                User u = users.Find(e => e.Username == pair.Key);
-                if (u == null)
-                {
-                    LeaveChat(new User(pair.Key, ""));
-                }
+                pair.Value.UpdateUsers(users);
             }
 
         }
 
-        public Dictionary<string, Chat> GetChats()
+        public Dictionary<Guid, Chat> GetChats()
         {
             return chatWindows;
         }

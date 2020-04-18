@@ -45,6 +45,7 @@ namespace Client.Windows
 			this.alignment1.BorderWidth = ((uint)(9));
 			// Container child alignment1.Gtk.Container+ContainerChild
 			this.vbox1 = new global::Gtk.VBox();
+			this.vbox1.Name = "vbox1";
 			this.vbox1.Spacing = 6;
 			// Container child vbox1.Gtk.Box+BoxChild
 			this.hseparator11 = new global::Gtk.HSeparator();

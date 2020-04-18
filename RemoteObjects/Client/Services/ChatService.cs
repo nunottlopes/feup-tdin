@@ -13,9 +13,9 @@ namespace Client.Services
             WindowManager.getInstance().MessageReceived(message);
         }
 
-        public void Exit(User src)
+        public void Exit(Guid guid, User src)
         {
-            WindowManager.getInstance().LeaveChat(src);
+            WindowManager.getInstance().LeaveChat(guid, src);
         }
     }
 }

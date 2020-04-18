@@ -42,15 +42,9 @@ namespace Common.Authentication
             }
         }
 
-        public bool Equals(User other)
-        {
-            if (other == null) return false;
-            return (this.Username.Equals(other.Username));
-        }
-
         public override int GetHashCode()
         {
-            return base.GetHashCode();
+            return Username.GetHashCode();
         }
     }
 }

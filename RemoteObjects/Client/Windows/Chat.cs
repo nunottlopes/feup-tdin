@@ -1,5 +1,5 @@
 ﻿using System;
-using Client.Services;
+using System.Collections.Generic;
 using Common.Authentication;
 using Common.Messages;
 
@@ -7,19 +7,17 @@ namespace Client.Windows
 {
     public partial class Chat : Gtk.Window
     {
+        private Guid guid;
         private User src;
 
-        private User dest;
-        private IChat chatService;
+        private Dictionary<User, IChat> dest;
 
-        public Chat(User src, User dest) :
+        public Chat(Guid guid, User src, User dest) :
                 base(Gtk.WindowType.Toplevel)
         {
+            this.guid = guid;
             this.src = src;
-            this.dest = dest;
-            this.chatService = new ChatService();
-            string url = $"tcp://localhost:{dest.Port}/Chat";
-            this.chatService = (IChat)Activator.GetObject(typeof(IChat), url);
+            this.dest = new Dictionary<User, IChat>();
 
             this.Build();
             this.Title = dest.Username;
@@ -27,13 +25,17 @@ namespace Client.Windows
             message.GrabFocus();
 
             AddTags();
+            AddUser(dest);
         }
 
         protected void OnDeleteEvent(object o, Gtk.DeleteEventArgs args)
         {
-            chatService.Exit(this.src);
-            WindowManager.getInstance().LeaveChat(this.dest);
-            args.RetVal = true;
+            foreach (IChat chatService in dest.Values)
+            {
+                chatService.Exit(guid, this.src);
+            }
+
+            WindowManager.getInstance().LeaveChat(guid);
         }
 
         protected void OnFocusInEvent(object o, Gtk.FocusInEventArgs args)
@@ -41,9 +43,57 @@ namespace Client.Windows
             message.GrabFocus();
         }
 
-        public User GetDestUser()
+        public List<User> GetDestUsers()
         {
-            return this.dest;
+            return new List<User>(dest.Keys);
+        }
+
+        public void UpdateUsers(List<User> online)
+        {
+            List<User> temp = new List<User>();
+            foreach (User u in dest.Keys)
+            {
+                if (!online.Contains(u))
+                {
+                    temp.Add(u);
+                }
+            }
+
+            foreach (User u in temp)
+            {
+                dest.Remove(u);
+            }
+
+            if (dest.Count == 0)
+            {
+                WindowManager.getInstance().LeaveChat(guid);
+            }
+        }
+
+        public void AddUser(User u)
+        {
+            string url = $"tcp://localhost:{u.Port}/Chat";
+            IChat chatService = (IChat)Activator.GetObject(typeof(IChat), url);
+            this.dest.Add(u, chatService);
+
+            Random r = new Random();
+
+            Gtk.TextTag tag = new Gtk.TextTag(u.Username);
+            chatview.Buffer.TagTable.Add(tag);
+            tag.ForegroundGdk = new Gdk.Color(
+                Convert.ToByte(r.Next(0, 256)),
+                Convert.ToByte(r.Next(0, 256)),
+                Convert.ToByte(r.Next(0, 256)));
+            tag.Weight = Pango.Weight.Bold;
+        }
+
+        public void RemoveUser(User u)
+        {
+            dest.Remove(u);
+            if (dest.Count == 0)
+            {
+                WindowManager.getInstance().LeaveChat(guid);
+            }
         }
 
         private void AddTags()
@@ -51,15 +101,15 @@ namespace Client.Windows
             Gtk.TextTag tag = new Gtk.TextTag("default");
             chatview.Buffer.TagTable.Add(tag);
 
+            Random r = new Random();
+
             Gtk.TextTag tag1 = new Gtk.TextTag(src.Username);
             chatview.Buffer.TagTable.Add(tag1);
-            tag1.Foreground = "red";
+            tag1.ForegroundGdk = new Gdk.Color(
+                Convert.ToByte(r.Next(0, 256)),
+                Convert.ToByte(r.Next(0, 256)),
+                Convert.ToByte(r.Next(0, 256)));
             tag1.Weight = Pango.Weight.Bold;
-
-            Gtk.TextTag tag2 = new Gtk.TextTag(dest.Username);
-            chatview.Buffer.TagTable.Add(tag2);
-            tag2.Foreground = "blue";
-            tag2.Weight = Pango.Weight.Bold;
         }
 
         protected void OnSendClicked(object sender, EventArgs e)
@@ -74,8 +124,11 @@ namespace Client.Windows
 
         private void SendMessage()
         {
-            chatService.Send(new Message(src, dest, message.Text));
-            AddMessage(new Message(src, dest, message.Text));
+            foreach(IChat chatService in dest.Values)
+            {
+                chatService.Send(new Message(guid, src, message.Text));
+            }
+            AddMessage(new Message(guid, src, message.Text));
             message.Text = "";
         }
 
@@ -96,16 +149,6 @@ namespace Client.Windows
         protected void OnChatviewSizeAllocated(object o, Gtk.SizeAllocatedArgs args)
         {
             chatview.ScrollToIter(chatview.Buffer.EndIter, 0, false, 0, 0);
-        }
-
-        public User GetSrc()
-        {
-            return this.src;
-        }
-
-        public User GetDest()
-        {
-            return this.dest;
         }
     }
 }

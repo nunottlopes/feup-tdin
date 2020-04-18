@@ -56,13 +56,13 @@ namespace Client.Windows
                 }
             }
 
-            Dictionary<string, Chat> chatWindows = WindowManager.getInstance().GetChats();
+            Dictionary<Guid, Chat> chatWindows = WindowManager.getInstance().GetChats();
             if(chatWindows.Count != 0)
             {
                 Console.WriteLine("[Chatting List]");
                 foreach (var chat in chatWindows)
                 {
-                    Console.WriteLine("> " + chat.Value.GetDest().Username);
+                    //Console.WriteLine("> " + chat.Value.GetDest().Username);
                 }
             }
 
@@ -236,8 +236,9 @@ namespace Client.Windows
             button1.Clicked += (s, e) => {
                 request.Destroy();
                 requests.RemoveAll(t => t.Item1.Equals(u));
-                callback.Accepted(u, this.user);
-                WindowManager.getInstance().RequestAccepted(this.user, u);
+                Guid guid = System.Guid.NewGuid();
+                callback.Accepted(guid, u, this.user);
+                WindowManager.getInstance().RequestAccepted(guid, this.user, u);
                 Refresh();
             };
             request.Add(button1);

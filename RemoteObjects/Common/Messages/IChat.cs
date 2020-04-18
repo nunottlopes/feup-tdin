@@ -6,6 +6,6 @@ namespace Common.Messages
     public interface IChat
     {
         void Send(Message message);
-        void Exit(User src);
+        void Exit(Guid guid, User src);
     }
 }

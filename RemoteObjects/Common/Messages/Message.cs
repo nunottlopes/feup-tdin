@@ -6,14 +6,14 @@ namespace Common.Messages
     [Serializable]
     public class Message
     {
+        public Guid guid { get; set; }
         public User src { get; set; }
-        public User dest { get; set; }
         public string content {get; set; }
 
-        public Message(User src, User dest, string content)
+        public Message(Guid guid, User src, string content)
         {
+            this.guid = guid;
             this.src = src;
-            this.dest = dest;
             this.content = content;
         }
     }
