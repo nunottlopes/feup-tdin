@@ -12,7 +12,7 @@ namespace Client.Windows
     {
         private readonly User user;
         private readonly AuthServer authServer;
-        private List<User> online;
+        public List<User> online { get; }
         private List<(User, IRequestCallback)> requests; //Requests received
         private List<User> requested; //Requests made
 
@@ -37,36 +37,36 @@ namespace Client.Windows
 
         public void PrintState()
         {
-            Console.WriteLine("--------Start---------");
-            if (this.requests.Count != 0)
-            {
-                Console.WriteLine("[Requests List]");
-                foreach (var item in this.requests)
-                {
-                    Console.WriteLine("> " + item.Item1.Username);
-                }
-            }
+            //Console.WriteLine("--------Start---------");
+            //if (this.requests.Count != 0)
+            //{
+            //    Console.WriteLine("[Requests List]");
+            //    foreach (var item in this.requests)
+            //    {
+            //        Console.WriteLine("> " + item.Item1.Username);
+            //    }
+            //}
 
-            if (this.requested.Count != 0)
-            {
-                Console.WriteLine("[Resquested List]");
-                foreach (var user in this.requested)
-                {
-                    Console.WriteLine("> " + user.Username);
-                }
-            }
+            //if (this.requested.Count != 0)
+            //{
+            //    Console.WriteLine("[Resquested List]");
+            //    foreach (var user in this.requested)
+            //    {
+            //        Console.WriteLine("> " + user.Username);
+            //    }
+            //}
 
-            Dictionary<Guid, Chat> chatWindows = WindowManager.getInstance().GetChats();
-            if(chatWindows.Count != 0)
-            {
-                Console.WriteLine("[Chatting List]");
-                foreach (var chat in chatWindows)
-                {
-                    //Console.WriteLine("> " + chat.Value.GetDest().Username);
-                }
-            }
+            //Dictionary<Guid, Chat> chatWindows = WindowManager.getInstance().GetChats();
+            //if(chatWindows.Count != 0)
+            //{
+            //    Console.WriteLine("[Chatting List]");
+            //    foreach (var chat in chatWindows)
+            //    {
+            //        //Console.WriteLine("> " + chat.Value.GetDest().Username);
+            //    }
+            //}
 
-            Console.WriteLine("---------End----------");
+            //Console.WriteLine("---------End----------");
         }
 
         protected void OnDeleteEvent(object o, Gtk.DeleteEventArgs args)
@@ -116,8 +116,8 @@ namespace Client.Windows
                 this.AddUserOnline(u);
             }
 
-            // Remove Chats with offline users
-            WindowManager.getInstance().RemoveOfflineChats(temp);
+            // Update Chat Windows
+            WindowManager.getInstance().UpdateChatWindows(temp);
 
             // Remove offline users from requests
             if (requests.Count == 0) return;
@@ -214,7 +214,6 @@ namespace Client.Windows
         {
             global::Gtk.HBox request = new global::Gtk.HBox
             {
-                Name = u.Username + "_request",
                 Spacing = 6
             };
             // Container child request.Gtk.Box+BoxChild

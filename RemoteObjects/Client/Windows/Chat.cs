@@ -12,6 +12,7 @@ namespace Client.Windows
         private User src;
 
         private Dictionary<User, IChat> dest;
+        private List<User> add;
 
         public Chat(Guid guid, User src, User dest) :
                 base(Gtk.WindowType.Toplevel)
@@ -19,6 +20,7 @@ namespace Client.Windows
             this.guid = guid;
             this.src = src;
             this.dest = new Dictionary<User, IChat>();
+            this.add = new List<User>();
 
             this.Build();
 
@@ -50,6 +52,7 @@ namespace Client.Windows
 
         public void UpdateUsers(List<User> online)
         {
+            // Remove offline users from chat
             List<User> temp = new List<User>();
             foreach (User u in dest.Keys)
             {
@@ -71,6 +74,20 @@ namespace Client.Windows
             {
                 UpdateChatUsersGUI();
             }
+
+            // Update online users list
+            Gtk.Application.Invoke(delegate
+            {
+                onlinelist.Forall(w => w.Destroy());
+            });
+
+            foreach (User u in online)
+            {
+                if(!(u.Equals(src) || dest.ContainsKey(u)))
+                {
+                    this.AddUserOnline(u);
+                }
+            }
         }
 
         public void AddUser(User u)
@@ -81,6 +98,15 @@ namespace Client.Windows
 
             CreateTag(u.Username);
             UpdateChatUsersGUI();
+        }
+
+        public void AddUserOnline(User u)
+        {
+            Gtk.Application.Invoke(delegate
+            {
+                onlinelist.Add(GetOnlineGUI(u));
+                onlinelist.ShowAll();
+            });
         }
 
         public void RemoveUser(User u)
@@ -191,6 +217,65 @@ namespace Client.Windows
         protected void OnChatviewSizeAllocated(object o, Gtk.SizeAllocatedArgs args)
         {
             chatview.ScrollToIter(chatview.Buffer.EndIter, 0, false, 0, 0);
+        }
+
+        private global::Gtk.HBox GetOnlineGUI(User u)
+        {
+            global::Gtk.HBox user = new global::Gtk.HBox
+            {
+                Name = u.Username,
+                Spacing = 6
+            };
+            global::Gtk.Label label = new global::Gtk.Label
+            {
+                LabelProp = global::Mono.Unix.Catalog.GetString(u.Username)
+            };
+            user.Add(label);
+
+            global::Gtk.Box.BoxChild bc1 = ((global::Gtk.Box.BoxChild)(user[label]));
+            bc1.Position = 0;
+
+            global::Gtk.Button button = new global::Gtk.Button
+            {
+                CanFocus = true,
+                UseUnderline = true,
+                Label = global::Mono.Unix.Catalog.GetString("Add")
+            };
+            if (this.add.Contains(u))
+            {
+                button.Sensitive = false;
+            }
+
+            button.Clicked += AddClicked;
+            user.Add(button);
+
+            global::Gtk.Box.BoxChild bc2 = ((global::Gtk.Box.BoxChild)(user[button]));
+            bc2.Position = 1;
+            bc2.Expand = false;
+            bc2.Fill = false;
+
+            return user;
+        }
+
+        private void AddClicked(object sender, EventArgs e)
+        {
+            Gtk.Button button = (Gtk.Button)sender;
+            string username = button.Parent.Name;
+            User user = WindowManager.getInstance().usersWindow.online.Find(x => x.Username == username);
+
+            if (user == null) return;
+            string url = $"tcp://localhost:{user.Port}/Request";
+
+            IRequest request = (IRequest)Activator.GetObject(typeof(IRequest), url);
+            //request.MakeRequest(this.user, user, new RequestCallback());
+            add.Add(user);
+
+            Console.WriteLine("[Request Add] {0}", user.Username);
+
+            Gtk.Application.Invoke(delegate
+            {
+                button.Sensitive = false;
+            });
         }
     }
 }

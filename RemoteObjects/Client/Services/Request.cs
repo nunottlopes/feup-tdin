@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Client.Windows;
 using Common.Authentication;
 using Common.Messages;
@@ -9,7 +10,7 @@ namespace Client.Services
     {
         public void MakeRequest(User src, User dest, IRequestCallback callback)
         {
-            Console.WriteLine("[Request Received] {0}", src.Username);
+            Console.WriteLine("[Request Received]");
             WindowManager.getInstance().RequestReceived(src, callback);
         }
     }

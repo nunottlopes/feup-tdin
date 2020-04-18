@@ -34,7 +34,9 @@ namespace Client.Windows
 
 		private global::Gtk.Label label3;
 
-		private global::Gtk.VBox userList;
+		private global::Gtk.ScrolledWindow scrolledwindow3;
+
+		private global::Gtk.VBox onlinelist;
 
 		protected virtual void Build()
 		{
@@ -60,6 +62,7 @@ namespace Client.Windows
 			this.scrolledwindow1 = new global::Gtk.ScrolledWindow();
 			this.scrolledwindow1.CanFocus = true;
 			this.scrolledwindow1.Name = "scrolledwindow1";
+			this.scrolledwindow1.HscrollbarPolicy = ((global::Gtk.PolicyType)(2));
 			this.scrolledwindow1.ShadowType = ((global::Gtk.ShadowType)(1));
 			// Container child scrolledwindow1.Gtk.Container+ContainerChild
 			this.chatview = new global::Gtk.TextView();
@@ -128,6 +131,7 @@ namespace Client.Windows
 			// Container child vbox4.Gtk.Box+BoxChild
 			this.GtkScrolledWindow = new global::Gtk.ScrolledWindow();
 			this.GtkScrolledWindow.Name = "GtkScrolledWindow";
+			this.GtkScrolledWindow.HscrollbarPolicy = ((global::Gtk.PolicyType)(2));
 			this.GtkScrolledWindow.ShadowType = ((global::Gtk.ShadowType)(1));
 			// Container child GtkScrolledWindow.Gtk.Container+ContainerChild
 			this.usersview = new global::Gtk.TextView();
@@ -160,18 +164,28 @@ namespace Client.Windows
 			w12.Expand = false;
 			w12.Fill = false;
 			// Container child vbox4.Gtk.Box+BoxChild
-			this.userList = new global::Gtk.VBox();
-			this.userList.HeightRequest = 100;
-			this.userList.Name = "userList";
-			this.userList.Spacing = 6;
-			this.vbox4.Add(this.userList);
-			global::Gtk.Box.BoxChild w13 = ((global::Gtk.Box.BoxChild)(this.vbox4[this.userList]));
-			w13.Position = 4;
+			this.scrolledwindow3 = new global::Gtk.ScrolledWindow();
+			this.scrolledwindow3.CanFocus = true;
+			this.scrolledwindow3.Name = "scrolledwindow3";
+			this.scrolledwindow3.HscrollbarPolicy = ((global::Gtk.PolicyType)(2));
+			this.scrolledwindow3.ShadowType = ((global::Gtk.ShadowType)(1));
+			// Container child scrolledwindow3.Gtk.Container+ContainerChild
+			global::Gtk.Viewport w13 = new global::Gtk.Viewport();
+			w13.ShadowType = ((global::Gtk.ShadowType)(0));
+			// Container child GtkViewport.Gtk.Container+ContainerChild
+			this.onlinelist = new global::Gtk.VBox();
+			this.onlinelist.Name = "onlinelist";
+			this.onlinelist.Spacing = 6;
+			w13.Add(this.onlinelist);
+			this.scrolledwindow3.Add(w13);
+			this.vbox4.Add(this.scrolledwindow3);
+			global::Gtk.Box.BoxChild w16 = ((global::Gtk.Box.BoxChild)(this.vbox4[this.scrolledwindow3]));
+			w16.Position = 4;
 			this.hbox1.Add(this.vbox4);
-			global::Gtk.Box.BoxChild w14 = ((global::Gtk.Box.BoxChild)(this.hbox1[this.vbox4]));
-			w14.Position = 2;
-			w14.Expand = false;
-			w14.Fill = false;
+			global::Gtk.Box.BoxChild w17 = ((global::Gtk.Box.BoxChild)(this.hbox1[this.vbox4]));
+			w17.Position = 2;
+			w17.Expand = false;
+			w17.Fill = false;
 			this.alignment1.Add(this.hbox1);
 			this.Add(this.alignment1);
 			if ((this.Child != null))

@@ -23,7 +23,7 @@ namespace Client.Windows
 
         private Auth authWindow;
         private Register registerWindow;
-        private Users usersWindow;
+        public Users usersWindow { get; set; }
         private Dictionary<Guid, Chat> chatWindows;
 
         public WindowManager()
@@ -74,11 +74,12 @@ namespace Client.Windows
 
         public void RequestAccepted(Guid guid, User src, User dest)
         {
-            Console.WriteLine("[Chatting] {0}", dest.Username);
+            Console.WriteLine("[Chatting]");
             usersWindow.RemoveRequested(dest);
             Gtk.Application.Invoke(delegate
             {
                 Chat chat = new Chat(guid, src, dest);
+                chat.UpdateUsers(usersWindow.online);
                 chatWindows.Add(guid, chat);
                 chat.Show();
             }); 
@@ -109,13 +110,17 @@ namespace Client.Windows
             chatWindows[guid].RemoveUser(src);
         }
 
-        public void RemoveOfflineChats(List<User> users)
+        internal void JoinChat(Guid guid, User u)
+        {
+            chatWindows[guid].AddUser(u);
+        }
+
+        public void UpdateChatWindows(List<User> users)
         {
             foreach (KeyValuePair<Guid, Chat> pair in chatWindows)
             {
                 pair.Value.UpdateUsers(users);
             }
-
         }
 
         public Dictionary<Guid, Chat> GetChats()
