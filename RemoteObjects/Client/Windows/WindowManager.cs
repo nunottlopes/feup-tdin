@@ -78,10 +78,11 @@ namespace Client.Windows
             usersWindow.RemoveRequested(dest);
             Gtk.Application.Invoke(delegate
             {
+                //Chat chat = new Chat(src, dest);
                 Chat chat = new Chat(src, dest);
                 chatWindows.Add(dest.Username, chat);
                 chat.Show();
-            });
+            }); 
         }
 
         public void RequestRefused(User src, User dest)
