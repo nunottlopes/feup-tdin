@@ -212,6 +212,8 @@ namespace Client.Windows
 			this.DefaultHeight = 194;
 			this.Show();
 			this.DeleteEvent += new global::Gtk.DeleteEventHandler(this.OnDeleteEvent);
+			this.username.Activated += new global::System.EventHandler(this.OnUsernameActivated);
+			this.password.Activated += new global::System.EventHandler(this.OnPasswordActivated);
 			this.exit.Clicked += new global::System.EventHandler(this.OnExitClicked);
 			this.login.Clicked += new global::System.EventHandler(this.OnLoginClicked);
 			this.register.Clicked += new global::System.EventHandler(this.OnRegisterClicked);

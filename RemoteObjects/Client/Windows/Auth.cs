@@ -28,10 +28,10 @@ namespace Client.Windows
             Application.Quit();
         }
 
-        protected void OnLoginClicked(object sender, EventArgs e)
+        private void Login()
         {
             User user = authServer.Login(username.Text, password.Text);
-            if(user == null)
+            if (user == null)
             {
                 status.Text = "Failed to Login";
                 ResetPassword();
@@ -41,6 +41,11 @@ namespace Client.Windows
                 status.Text = "Login Successful";
                 WindowManager.getInstance().Login(user);
             }
+        }
+
+        protected void OnLoginClicked(object sender, EventArgs e)
+        {
+            Login();
         }
 
         protected void OnRegisterClicked(object sender, EventArgs e)
@@ -58,6 +63,16 @@ namespace Client.Windows
         public void ResetPassword()
         {
             password.Text = "";
+        }
+
+        protected void OnPasswordActivated(object sender, EventArgs e)
+        {
+            Login();
+        }
+
+        protected void OnUsernameActivated(object sender, EventArgs e)
+        {
+            password.GrabFocus();
         }
     }
 }
