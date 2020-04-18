@@ -20,11 +20,13 @@ namespace Client.Windows
 
 		private global::Gtk.Button send;
 
+		private global::Gtk.VSeparator vseparator1;
+
 		private global::Gtk.VBox vbox4;
 
 		private global::Gtk.Label label1;
 
-		private global::Gtk.ScrolledWindow scrolledwindow5;
+		private global::Gtk.ScrolledWindow GtkScrolledWindow;
 
 		private global::Gtk.TextView usersview;
 
@@ -41,6 +43,7 @@ namespace Client.Windows
 			this.Name = "Client.Windows.Chat";
 			this.Title = global::Mono.Unix.Catalog.GetString("Chat");
 			this.WindowPosition = ((global::Gtk.WindowPosition)(4));
+			this.BorderWidth = ((uint)(3));
 			// Container child Client.Windows.Chat.Gtk.Container+ContainerChild
 			this.alignment1 = new global::Gtk.Alignment(0.5F, 0.5F, 1F, 1F);
 			this.alignment1.Name = "alignment1";
@@ -48,6 +51,7 @@ namespace Client.Windows
 			this.hbox1 = new global::Gtk.HBox();
 			this.hbox1.Name = "hbox1";
 			this.hbox1.Spacing = 6;
+			this.hbox1.BorderWidth = ((uint)(6));
 			// Container child hbox1.Gtk.Box+BoxChild
 			this.vbox2 = new global::Gtk.VBox();
 			this.vbox2.Name = "vbox2";
@@ -61,6 +65,8 @@ namespace Client.Windows
 			this.chatview = new global::Gtk.TextView();
 			this.chatview.CanFocus = true;
 			this.chatview.Name = "chatview";
+			this.chatview.Editable = false;
+			this.chatview.CursorVisible = false;
 			this.scrolledwindow1.Add(this.chatview);
 			this.vbox2.Add(this.scrolledwindow1);
 			global::Gtk.Box.BoxChild w2 = ((global::Gtk.Box.BoxChild)(this.vbox2[this.scrolledwindow1]));
@@ -98,6 +104,15 @@ namespace Client.Windows
 			global::Gtk.Box.BoxChild w6 = ((global::Gtk.Box.BoxChild)(this.hbox1[this.vbox2]));
 			w6.Position = 0;
 			// Container child hbox1.Gtk.Box+BoxChild
+			this.vseparator1 = new global::Gtk.VSeparator();
+			this.vseparator1.WidthRequest = 13;
+			this.vseparator1.Name = "vseparator1";
+			this.hbox1.Add(this.vseparator1);
+			global::Gtk.Box.BoxChild w7 = ((global::Gtk.Box.BoxChild)(this.hbox1[this.vseparator1]));
+			w7.Position = 1;
+			w7.Expand = false;
+			w7.Fill = false;
+			// Container child hbox1.Gtk.Box+BoxChild
 			this.vbox4 = new global::Gtk.VBox();
 			this.vbox4.Name = "vbox4";
 			this.vbox4.Spacing = 6;
@@ -106,60 +121,64 @@ namespace Client.Windows
 			this.label1.Name = "label1";
 			this.label1.LabelProp = global::Mono.Unix.Catalog.GetString("Chat Users");
 			this.vbox4.Add(this.label1);
-			global::Gtk.Box.BoxChild w7 = ((global::Gtk.Box.BoxChild)(this.vbox4[this.label1]));
-			w7.Position = 0;
-			w7.Expand = false;
-			w7.Fill = false;
+			global::Gtk.Box.BoxChild w8 = ((global::Gtk.Box.BoxChild)(this.vbox4[this.label1]));
+			w8.Position = 0;
+			w8.Expand = false;
+			w8.Fill = false;
 			// Container child vbox4.Gtk.Box+BoxChild
-			this.scrolledwindow5 = new global::Gtk.ScrolledWindow();
-			this.scrolledwindow5.CanFocus = true;
-			this.scrolledwindow5.Name = "scrolledwindow5";
-			this.scrolledwindow5.ShadowType = ((global::Gtk.ShadowType)(1));
-			// Container child scrolledwindow5.Gtk.Container+ContainerChild
+			this.GtkScrolledWindow = new global::Gtk.ScrolledWindow();
+			this.GtkScrolledWindow.Name = "GtkScrolledWindow";
+			this.GtkScrolledWindow.ShadowType = ((global::Gtk.ShadowType)(1));
+			// Container child GtkScrolledWindow.Gtk.Container+ContainerChild
 			this.usersview = new global::Gtk.TextView();
+			this.usersview.WidthRequest = 123;
 			this.usersview.CanFocus = true;
 			this.usersview.Name = "usersview";
-			this.scrolledwindow5.Add(this.usersview);
-			this.vbox4.Add(this.scrolledwindow5);
-			global::Gtk.Box.BoxChild w9 = ((global::Gtk.Box.BoxChild)(this.vbox4[this.scrolledwindow5]));
-			w9.Position = 1;
+			this.usersview.Editable = false;
+			this.usersview.CursorVisible = false;
+			this.GtkScrolledWindow.Add(this.usersview);
+			this.vbox4.Add(this.GtkScrolledWindow);
+			global::Gtk.Box.BoxChild w10 = ((global::Gtk.Box.BoxChild)(this.vbox4[this.GtkScrolledWindow]));
+			w10.Position = 1;
 			// Container child vbox4.Gtk.Box+BoxChild
 			this.hseparator1 = new global::Gtk.HSeparator();
+			this.hseparator1.HeightRequest = 9;
 			this.hseparator1.Name = "hseparator1";
 			this.vbox4.Add(this.hseparator1);
-			global::Gtk.Box.BoxChild w10 = ((global::Gtk.Box.BoxChild)(this.vbox4[this.hseparator1]));
-			w10.Position = 2;
-			w10.Expand = false;
-			w10.Fill = false;
+			global::Gtk.Box.BoxChild w11 = ((global::Gtk.Box.BoxChild)(this.vbox4[this.hseparator1]));
+			w11.Position = 2;
+			w11.Expand = false;
+			w11.Fill = false;
 			// Container child vbox4.Gtk.Box+BoxChild
 			this.label3 = new global::Gtk.Label();
 			this.label3.Name = "label3";
 			this.label3.LabelProp = global::Mono.Unix.Catalog.GetString("Online Users");
 			this.vbox4.Add(this.label3);
-			global::Gtk.Box.BoxChild w11 = ((global::Gtk.Box.BoxChild)(this.vbox4[this.label3]));
-			w11.Position = 3;
-			w11.Expand = false;
-			w11.Fill = false;
+			global::Gtk.Box.BoxChild w12 = ((global::Gtk.Box.BoxChild)(this.vbox4[this.label3]));
+			w12.Position = 3;
+			w12.Expand = false;
+			w12.Fill = false;
 			// Container child vbox4.Gtk.Box+BoxChild
 			this.userList = new global::Gtk.VBox();
+			this.userList.HeightRequest = 100;
 			this.userList.Name = "userList";
 			this.userList.Spacing = 6;
 			this.vbox4.Add(this.userList);
-			global::Gtk.Box.BoxChild w12 = ((global::Gtk.Box.BoxChild)(this.vbox4[this.userList]));
-			w12.Position = 4;
+			global::Gtk.Box.BoxChild w13 = ((global::Gtk.Box.BoxChild)(this.vbox4[this.userList]));
+			w13.Position = 4;
 			this.hbox1.Add(this.vbox4);
-			global::Gtk.Box.BoxChild w13 = ((global::Gtk.Box.BoxChild)(this.hbox1[this.vbox4]));
-			w13.Position = 1;
-			w13.Expand = false;
-			w13.Fill = false;
+			global::Gtk.Box.BoxChild w14 = ((global::Gtk.Box.BoxChild)(this.hbox1[this.vbox4]));
+			w14.Position = 2;
+			w14.Expand = false;
+			w14.Fill = false;
 			this.alignment1.Add(this.hbox1);
 			this.Add(this.alignment1);
 			if ((this.Child != null))
 			{
 				this.Child.ShowAll();
 			}
-			this.DefaultWidth = 414;
-			this.DefaultHeight = 300;
+			this.DefaultWidth = 543;
+			this.DefaultHeight = 331;
 			this.Show();
 			this.FocusInEvent += new global::Gtk.FocusInEventHandler(this.OnFocusInEvent);
 			this.DeleteEvent += new global::Gtk.DeleteEventHandler(this.OnDeleteEvent);

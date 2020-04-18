@@ -618,10 +618,11 @@
       </widget>
     </child>
   </widget>
-  <widget class="Gtk.Window" id="Client.Windows.Chat" design-size="414 300">
+  <widget class="Gtk.Window" id="Client.Windows.Chat" design-size="543 331">
     <property name="MemberName" />
     <property name="Title" translatable="yes">Chat</property>
     <property name="WindowPosition">CenterOnParent</property>
+    <property name="BorderWidth">3</property>
     <signal name="FocusInEvent" handler="OnFocusInEvent" />
     <signal name="DeleteEvent" handler="OnDeleteEvent" />
     <child>
@@ -631,6 +632,7 @@
           <widget class="Gtk.HBox" id="hbox1">
             <property name="MemberName" />
             <property name="Spacing">6</property>
+            <property name="BorderWidth">6</property>
             <child>
               <widget class="Gtk.VBox" id="vbox2">
                 <property name="MemberName" />
@@ -644,6 +646,8 @@
                       <widget class="Gtk.TextView" id="chatview">
                         <property name="MemberName" />
                         <property name="CanFocus">True</property>
+                        <property name="Editable">False</property>
+                        <property name="CursorVisible">False</property>
                         <property name="Text" translatable="yes" />
                         <signal name="SizeAllocated" handler="OnChatviewSizeAllocated" />
                       </widget>
@@ -702,6 +706,18 @@
               </packing>
             </child>
             <child>
+              <widget class="Gtk.VSeparator" id="vseparator1">
+                <property name="MemberName" />
+                <property name="WidthRequest">13</property>
+              </widget>
+              <packing>
+                <property name="Position">1</property>
+                <property name="AutoSize">False</property>
+                <property name="Expand">False</property>
+                <property name="Fill">False</property>
+              </packing>
+            </child>
+            <child>
               <widget class="Gtk.VBox" id="vbox4">
                 <property name="MemberName" />
                 <property name="Spacing">6</property>
@@ -718,14 +734,17 @@
                   </packing>
                 </child>
                 <child>
-                  <widget class="Gtk.ScrolledWindow" id="scrolledwindow5">
+                  <widget class="Gtk.ScrolledWindow" id="GtkScrolledWindow">
                     <property name="MemberName" />
-                    <property name="CanFocus">True</property>
                     <property name="ShadowType">In</property>
                     <child>
                       <widget class="Gtk.TextView" id="usersview">
                         <property name="MemberName" />
+                        <property name="WidthRequest">123</property>
                         <property name="CanFocus">True</property>
+                        <property name="ShowScrollbars">True</property>
+                        <property name="Editable">False</property>
+                        <property name="CursorVisible">False</property>
                         <property name="Text" translatable="yes" />
                       </widget>
                     </child>
@@ -738,6 +757,7 @@
                 <child>
                   <widget class="Gtk.HSeparator" id="hseparator1">
                     <property name="MemberName" />
+                    <property name="HeightRequest">9</property>
                   </widget>
                   <packing>
                     <property name="Position">2</property>
@@ -761,6 +781,7 @@
                 <child>
                   <widget class="Gtk.VBox" id="userList">
                     <property name="MemberName" />
+                    <property name="HeightRequest">100</property>
                     <property name="Spacing">6</property>
                     <child>
                       <placeholder />
@@ -773,7 +794,7 @@
                 </child>
               </widget>
               <packing>
-                <property name="Position">1</property>
+                <property name="Position">2</property>
                 <property name="AutoSize">True</property>
                 <property name="Expand">False</property>
                 <property name="Fill">False</property>
