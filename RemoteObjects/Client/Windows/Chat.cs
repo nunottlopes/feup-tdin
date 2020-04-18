@@ -97,5 +97,15 @@ namespace Client.Windows
         {
             chatview.ScrollToIter(chatview.Buffer.EndIter, 0, false, 0, 0);
         }
+
+        public User GetSrc()
+        {
+            return this.src;
+        }
+
+        public User GetDest()
+        {
+            return this.dest;
+        }
     }
 }

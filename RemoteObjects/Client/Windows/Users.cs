@@ -56,14 +56,16 @@ namespace Client.Windows
                 }
             }
 
-            //if (this.chats.Count != 0)
-            //{
-            //    Console.WriteLine("[Chatting List]");
-            //    foreach (var chat in this.chats)
-            //    {
-            //        Console.WriteLine("> " + chat.GetDestUser().Username);
-            //    }
-            //}
+            Dictionary<string, Chat> chatWindows = WindowManager.getInstance().GetChats();
+            if(chatWindows.Count != 0)
+            {
+                Console.WriteLine("[Chatting List]");
+                foreach (var chat in chatWindows)
+                {
+                    Console.WriteLine("> " + chat.Value.GetDest().Username);
+                }
+            }
+
             Console.WriteLine("---------End----------");
         }
 

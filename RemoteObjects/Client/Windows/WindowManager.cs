@@ -116,5 +116,10 @@ namespace Client.Windows
             }
 
         }
+
+        public Dictionary<string, Chat> GetChats()
+        {
+            return chatWindows;
+        }
     }
 }
