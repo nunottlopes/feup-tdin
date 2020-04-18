@@ -90,6 +90,9 @@ namespace Client.Windows
 			this.DefaultHeight = 366;
 			this.Show();
 			this.DeleteEvent += new global::Gtk.DeleteEventHandler(this.OnDeleteEvent);
+			this.FocusInEvent += new global::Gtk.FocusInEventHandler(this.OnFocusInEvent);
+			this.chatview.SizeAllocated += new global::Gtk.SizeAllocatedHandler(this.OnChatviewSizeAllocated);
+			this.message.Activated += new global::System.EventHandler(this.OnMessageActivated);
 			this.send.Clicked += new global::System.EventHandler(this.OnSendClicked);
 		}
 	}

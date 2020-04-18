@@ -114,6 +114,9 @@ namespace Client.Windows
                 this.AddUserOnline(u);
             }
 
+            // Remove Chats with offline users
+            WindowManager.getInstance().RemoveOfflineChats(temp);
+
             // Remove offline users from requests
             if (requests.Count == 0) return;
             List<(User, IRequestCallback)> temp1 = requests.FindAll(e => online.Contains(e.Item1));

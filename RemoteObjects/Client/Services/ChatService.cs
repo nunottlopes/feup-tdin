@@ -1,4 +1,6 @@
 ﻿using System;
+using Client.Windows;
+using Common.Authentication;
 using Common.Messages;
 
 namespace Client.Services
@@ -7,12 +9,13 @@ namespace Client.Services
     {
         public void Send(Message message)
         {
-            Console.WriteLine("[Message from {0}] {1}", message.src.Username, message.content);
+            Console.WriteLine("[Message] {1}", message.src.Username, message.content);
+            WindowManager.getInstance().MessageReceived(message);
         }
 
-        public void Exit()
+        public void Exit(User src)
         {
-            Console.WriteLine("[Chat] Exit");
+            WindowManager.getInstance().LeaveChat(src);
         }
     }
 }

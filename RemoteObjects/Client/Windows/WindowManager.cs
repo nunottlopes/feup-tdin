@@ -24,15 +24,14 @@ namespace Client.Windows
         private Auth authWindow;
         private Register registerWindow;
         private Users usersWindow;
-        private List<Chat> chatWindows;
+        private Dictionary<string, Chat> chatWindows;
 
         public WindowManager()
         {
             state = State.LOGIN;
-            //authWindow = new Auth();
+            authWindow = new Auth();
 
-            //authWindow.Show();
-            new Chat().Show();
+            authWindow.Show();
         }
 
         public void Register()
@@ -57,9 +56,9 @@ namespace Client.Windows
             if(state == State.LOGIN)
             {
                 authWindow.Destroy();
+                chatWindows = new Dictionary<string, Chat>();
                 usersWindow = new Users(user);
                 usersWindow.Show();
-                chatWindows = new List<Chat>();
                 state = State.USERS;
             }
         }
@@ -80,7 +79,7 @@ namespace Client.Windows
             Gtk.Application.Invoke(delegate
             {
                 Chat chat = new Chat(src, dest);
-                chatWindows.Add(chat);
+                chatWindows.Add(dest.Username, chat);
                 chat.Show();
             });
         }
@@ -88,6 +87,34 @@ namespace Client.Windows
         public void RequestRefused(User src, User dest)
         {
             usersWindow.RemoveRequested(dest);
+        }
+
+        public void MessageReceived(Message msg)
+        {
+            chatWindows[msg.src.Username].AddMessage(msg);
+        }
+
+        public void LeaveChat(User u)
+        {
+            Console.WriteLine("[Leave Chat] {0}", u.Username);
+            Gtk.Application.Invoke(delegate
+            {
+                chatWindows[u.Username].Destroy();
+                chatWindows.Remove(u.Username);
+            });
+        }
+
+        public void RemoveOfflineChats(List<User> users)
+        {
+            foreach (KeyValuePair<string, Chat> pair in chatWindows)
+            {
+                User u = users.Find(e => e.Username == pair.Key);
+                if (u == null)
+                {
+                    LeaveChat(new User(pair.Key, ""));
+                }
+            }
+
         }
     }
 }

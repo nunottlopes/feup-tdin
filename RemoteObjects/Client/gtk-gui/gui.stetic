@@ -621,6 +621,7 @@
     <property name="Title" translatable="yes">Chat</property>
     <property name="WindowPosition">CenterOnParent</property>
     <signal name="DeleteEvent" handler="OnDeleteEvent" />
+    <signal name="FocusInEvent" handler="OnFocusInEvent" />
     <child>
       <widget class="Gtk.Alignment" id="alignment1">
         <property name="MemberName" />
@@ -645,6 +646,7 @@
                     <property name="CursorVisible">False</property>
                     <property name="Text" translatable="yes" />
                     <property name="WrapMode">WordChar</property>
+                    <signal name="SizeAllocated" handler="OnChatviewSizeAllocated" />
                   </widget>
                 </child>
               </widget>
@@ -663,6 +665,7 @@
                     <property name="CanFocus">True</property>
                     <property name="IsEditable">True</property>
                     <property name="InvisibleChar">●</property>
+                    <signal name="Activated" handler="OnMessageActivated" />
                   </widget>
                   <packing>
                     <property name="Position">0</property>

@@ -23,19 +23,22 @@ namespace Client.Windows
 
             this.Build();
             this.Title = dest.Username;
-        }
 
-        public Chat() :
-                base(Gtk.WindowType.Toplevel)
-        {
-            this.Build();
-            chatview.Buffer.Text = global::Mono.Unix.Catalog.GetString("abc");
+            message.GrabFocus();
+
+            AddTags();
         }
 
         protected void OnDeleteEvent(object o, Gtk.DeleteEventArgs args)
         {
-            chatService.Exit();
-            this.Destroy();
+            chatService.Exit(this.src);
+            WindowManager.getInstance().LeaveChat(this.dest);
+            args.RetVal = true;
+        }
+
+        protected void OnFocusInEvent(object o, Gtk.FocusInEventArgs args)
+        {
+            message.GrabFocus();
         }
 
         public User GetDestUser()
@@ -43,18 +46,56 @@ namespace Client.Windows
             return this.dest;
         }
 
+        private void AddTags()
+        {
+            Gtk.TextTag tag = new Gtk.TextTag("default");
+            chatview.Buffer.TagTable.Add(tag);
+
+            Gtk.TextTag tag1 = new Gtk.TextTag(src.Username);
+            chatview.Buffer.TagTable.Add(tag1);
+            tag1.Foreground = "red";
+            tag1.Weight = Pango.Weight.Bold;
+
+            Gtk.TextTag tag2 = new Gtk.TextTag(dest.Username);
+            chatview.Buffer.TagTable.Add(tag2);
+            tag2.Foreground = "blue";
+            tag2.Weight = Pango.Weight.Bold;
+        }
+
         protected void OnSendClicked(object sender, EventArgs e)
         {
-            //chatService.Send(new Message(src, dest, message.Text));
+            SendMessage();
+        }
+
+        protected void OnMessageActivated(object sender, EventArgs e)
+        {
+            SendMessage();
+        }
+
+        private void SendMessage()
+        {
+            chatService.Send(new Message(src, dest, message.Text));
             AddMessage(new Message(src, dest, message.Text));
             message.Text = "";
         }
 
         public void AddMessage(Message msg)
         {
-            Console.WriteLine(msg.content);
-            chatview.Buffer.Text += $"{msg.src.Username}: {msg.content}";
+            string header = msg.src.Username + ": ";
+            string main = msg.content + "\n";
+
+            Gtk.Application.Invoke(delegate
+            {
+                Gtk.TextIter iter = chatview.Buffer.EndIter;
+
+                chatview.Buffer.InsertWithTagsByName(ref iter, header, msg.src.Username);
+                chatview.Buffer.InsertWithTagsByName(ref iter, main, "default");
+            });
         }
 
+        protected void OnChatviewSizeAllocated(object o, Gtk.SizeAllocatedArgs args)
+        {
+            chatview.ScrollToIter(chatview.Buffer.EndIter, 0, false, 0, 0);
+        }
     }
 }
