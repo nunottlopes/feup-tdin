@@ -73,6 +73,7 @@
     <Compile Include="Services\ChatService.cs" />
     <Compile Include="Windows\Chat.cs" />
     <Compile Include="gtk-gui\Client.Windows.Chat.cs" />
+    <Compile Include="Services\GroupRequest.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

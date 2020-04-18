@@ -7,5 +7,6 @@ namespace Common.Messages
     {
         void Send(Message message);
         void Exit(Guid guid, User src);
+        void RequestMade(Guid guid, User u);
     }
 }

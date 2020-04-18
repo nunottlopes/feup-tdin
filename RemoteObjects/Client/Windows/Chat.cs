@@ -12,7 +12,7 @@ namespace Client.Windows
         private User src;
 
         private Dictionary<User, IChat> dest;
-        private List<User> add;
+        private List<User> requests;
 
         public Chat(Guid guid, User src, User dest) :
                 base(Gtk.WindowType.Toplevel)
@@ -20,7 +20,7 @@ namespace Client.Windows
             this.guid = guid;
             this.src = src;
             this.dest = new Dictionary<User, IChat>();
-            this.add = new List<User>();
+            this.requests = new List<User>();
 
             this.Build();
 
@@ -88,6 +88,9 @@ namespace Client.Windows
                     this.AddUserOnline(u);
                 }
             }
+
+            // Remove offline user requested
+            requests = requests.FindAll(e => online.Contains(e));
         }
 
         public void AddUser(User u)
@@ -241,7 +244,7 @@ namespace Client.Windows
                 UseUnderline = true,
                 Label = global::Mono.Unix.Catalog.GetString("Add")
             };
-            if (this.add.Contains(u))
+            if (this.requests.Contains(u))
             {
                 button.Sensitive = false;
             }
@@ -264,11 +267,18 @@ namespace Client.Windows
             User user = WindowManager.getInstance().usersWindow.online.Find(x => x.Username == username);
 
             if (user == null) return;
-            string url = $"tcp://localhost:{user.Port}/Request";
+            string url = $"tcp://localhost:{user.Port}/GroupRequest";
 
-            IRequest request = (IRequest)Activator.GetObject(typeof(IRequest), url);
-            //request.MakeRequest(this.user, user, new RequestCallback());
-            add.Add(user);
+            foreach(IChat ichat in dest.Values)
+            {
+                ichat.RequestMade(this.guid, user);
+            }
+
+            IGroupRequest request = (IGroupRequest)Activator.GetObject(typeof(IGroupRequest), url);
+            List<User> all = new List<User>(dest.Keys);
+            all.Add(src);
+            request.MakeRequest(this.guid, all, user);
+            this.requests.Add(user);
 
             Console.WriteLine("[Request Add] {0}", user.Username);
 
@@ -276,6 +286,17 @@ namespace Client.Windows
             {
                 button.Sensitive = false;
             });
+        }
+
+        public void AddRequest(User u)
+        {
+            this.requests.Add(u);
+            Refresh();
+        }
+
+        private void Refresh()
+        {
+            UpdateUsers(WindowManager.getInstance().usersWindow.online);
         }
     }
 }

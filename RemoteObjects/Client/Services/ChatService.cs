@@ -17,5 +17,10 @@ namespace Client.Services
         {
             WindowManager.getInstance().LeaveChat(guid, src);
         }
+
+        public void RequestMade(Guid guid, User u)
+        {
+            WindowManager.getInstance().GroupRequestMade(guid, u);
+        }
     }
 }

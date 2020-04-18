@@ -24,6 +24,7 @@ namespace Client.Windows
         private Auth authWindow;
         private Register registerWindow;
         public Users usersWindow { get; set; }
+
         private Dictionary<Guid, Chat> chatWindows;
 
         public WindowManager()
@@ -126,6 +127,11 @@ namespace Client.Windows
         public Dictionary<Guid, Chat> GetChats()
         {
             return chatWindows;
+        }
+
+        internal void GroupRequestMade(Guid guid, User u)
+        {
+            chatWindows[guid].AddRequest(u);
         }
     }
 }

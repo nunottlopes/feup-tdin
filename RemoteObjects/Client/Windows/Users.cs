@@ -132,6 +132,9 @@ namespace Client.Windows
                 this.AddRequest(u, cb);
             }
 
+            // Remove offline user requested
+            requested = requested.FindAll(e => online.Contains(e));
+
             this.PrintState();
         }
 
