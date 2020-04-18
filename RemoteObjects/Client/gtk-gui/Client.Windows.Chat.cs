@@ -136,6 +136,7 @@ namespace Client.Windows
 			this.usersview.Name = "usersview";
 			this.usersview.Editable = false;
 			this.usersview.CursorVisible = false;
+			this.usersview.Justification = ((global::Gtk.Justification)(2));
 			this.GtkScrolledWindow.Add(this.usersview);
 			this.vbox4.Add(this.GtkScrolledWindow);
 			global::Gtk.Box.BoxChild w10 = ((global::Gtk.Box.BoxChild)(this.vbox4[this.GtkScrolledWindow]));

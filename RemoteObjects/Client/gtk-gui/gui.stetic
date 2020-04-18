@@ -746,6 +746,7 @@
                         <property name="Editable">False</property>
                         <property name="CursorVisible">False</property>
                         <property name="Text" translatable="yes" />
+                        <property name="Justification">Center</property>
                       </widget>
                     </child>
                   </widget>

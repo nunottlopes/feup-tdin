@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Common.Authentication;
 using Common.Messages;
 
@@ -20,7 +21,6 @@ namespace Client.Windows
             this.dest = new Dictionary<User, IChat>();
 
             this.Build();
-            this.Title = dest.Username;
 
             message.GrabFocus();
 
@@ -67,6 +67,9 @@ namespace Client.Windows
             if (dest.Count == 0)
             {
                 WindowManager.getInstance().LeaveChat(guid);
+            } else
+            {
+                UpdateChatUsersGUI();
             }
         }
 
@@ -76,15 +79,8 @@ namespace Client.Windows
             IChat chatService = (IChat)Activator.GetObject(typeof(IChat), url);
             this.dest.Add(u, chatService);
 
-            Random r = new Random();
-
-            Gtk.TextTag tag = new Gtk.TextTag(u.Username);
-            chatview.Buffer.TagTable.Add(tag);
-            tag.ForegroundGdk = new Gdk.Color(
-                Convert.ToByte(r.Next(0, 256)),
-                Convert.ToByte(r.Next(0, 256)),
-                Convert.ToByte(r.Next(0, 256)));
-            tag.Weight = Pango.Weight.Bold;
+            CreateTag(u.Username);
+            UpdateChatUsersGUI();
         }
 
         public void RemoveUser(User u)
@@ -93,7 +89,36 @@ namespace Client.Windows
             if (dest.Count == 0)
             {
                 WindowManager.getInstance().LeaveChat(guid);
+            } else
+            {
+                UpdateChatUsersGUI();
             }
+        }
+
+        private void UpdateChatUsersGUI()
+        {
+            Gtk.Application.Invoke(delegate
+            {
+                usersview.Buffer.Text = "";
+                Gtk.TextIter iter = usersview.Buffer.EndIter;
+
+                string text = src.Username + " (me)\n";
+                usersview.Buffer.InsertWithTagsByName(ref iter, text, src.Username);
+
+                foreach (User u in dest.Keys)
+                {
+                    text = u.Username + "\n";
+                    usersview.Buffer.InsertWithTagsByName(ref iter, text, u.Username);
+                }
+
+                if(dest.Count == 1)
+                {
+                    this.Title = "Chat - " + dest.First().Key.Username;
+                } else
+                {
+                    this.Title = "Group Chat";
+                }
+            });
         }
 
         private void AddTags()
@@ -101,15 +126,30 @@ namespace Client.Windows
             Gtk.TextTag tag = new Gtk.TextTag("default");
             chatview.Buffer.TagTable.Add(tag);
 
+            CreateTag(src.Username);
+        }
+
+        private void CreateTag(string name)
+        {
             Random r = new Random();
 
-            Gtk.TextTag tag1 = new Gtk.TextTag(src.Username);
-            chatview.Buffer.TagTable.Add(tag1);
-            tag1.ForegroundGdk = new Gdk.Color(
-                Convert.ToByte(r.Next(0, 256)),
-                Convert.ToByte(r.Next(0, 256)),
-                Convert.ToByte(r.Next(0, 256)));
-            tag1.Weight = Pango.Weight.Bold;
+            Gtk.Application.Invoke(delegate
+            {
+                Gdk.Color c = new Gdk.Color(
+                    Convert.ToByte(r.Next(0, 256)),
+                    Convert.ToByte(r.Next(0, 256)),
+                    Convert.ToByte(r.Next(0, 256)));
+
+                Gtk.TextTag tag = new Gtk.TextTag(name);
+                chatview.Buffer.TagTable.Add(tag);
+                tag.ForegroundGdk = c;
+                tag.Weight = Pango.Weight.Bold;
+
+                Gtk.TextTag tag1 = new Gtk.TextTag(name);
+                usersview.Buffer.TagTable.Add(tag1);
+                tag1.ForegroundGdk = c;
+                tag1.Weight = Pango.Weight.Bold;
+            });
         }
 
         protected void OnSendClicked(object sender, EventArgs e)
@@ -124,6 +164,8 @@ namespace Client.Windows
 
         private void SendMessage()
         {
+            if (message.Text.Trim() == "") return;
+
             foreach(IChat chatService in dest.Values)
             {
                 chatService.Send(new Message(guid, src, message.Text));
