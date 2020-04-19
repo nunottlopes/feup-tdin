@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Client.ServerServices;
 using Common.Authentication;
 using Common.Messages;
 
@@ -11,33 +12,38 @@ namespace Client.Windows
         private Guid guid;
         private User src;
 
-        private Dictionary<User, IChat> dest;
-        private List<User> requests;
+        private ChatManagerServer chatManagerServer;
 
-        public Chat(Guid guid, User src, User dest) :
+        private Dictionary<User, IChat> dest;
+
+        private List<string> tags;
+
+        public Chat(Guid guid, User src) :
                 base(Gtk.WindowType.Toplevel)
         {
             this.guid = guid;
             this.src = src;
             this.dest = new Dictionary<User, IChat>();
-            this.requests = new List<User>();
+            this.tags = new List<string>();
+
+            this.chatManagerServer = new ChatManagerServer();
 
             this.Build();
 
             message.GrabFocus();
 
             AddTags();
-            AddUser(dest);
+            Refresh(WindowManager.getInstance().usersWindow.online);
         }
 
         protected void OnDeleteEvent(object o, Gtk.DeleteEventArgs args)
         {
+            chatManagerServer.RemoveUserFromChat(guid, src);
             foreach (IChat chatService in dest.Values)
             {
                 chatService.Exit(guid, this.src);
             }
-
-            WindowManager.getInstance().LeaveChat(guid);
+            WindowManager.getInstance().LeaveChat(guid, src);
         }
 
         protected void OnFocusInEvent(object o, Gtk.FocusInEventArgs args)
@@ -52,28 +58,24 @@ namespace Client.Windows
 
         public void UpdateUsers(List<User> online)
         {
-            // Remove offline users from chat
-            List<User> temp = new List<User>();
-            foreach (User u in dest.Keys)
+            online = online.FindAll(u => !u.Equals(src));
+
+            dest.Clear();
+            List<User> temp = chatManagerServer.GetUsersInChat(guid);
+            temp.RemoveAll(u => u.Equals(src));
+
+            if (temp.Count == 0)
             {
-                if (!online.Contains(u))
-                {
-                    temp.Add(u);
-                }
+                chatManagerServer.RemoveUserFromChat(guid, src);
+                WindowManager.getInstance().LeaveChat(guid, src);
+                return;
             }
 
             foreach (User u in temp)
             {
-                dest.Remove(u);
+                AddUser(u);
             }
-
-            if (dest.Count == 0)
-            {
-                WindowManager.getInstance().LeaveChat(guid);
-            } else
-            {
-                UpdateChatUsersGUI();
-            }
+            UpdateChatUsersGUI();
 
             // Update online users list
             Gtk.Application.Invoke(delegate
@@ -86,11 +88,8 @@ namespace Client.Windows
                 if(!(u.Equals(src) || dest.ContainsKey(u)))
                 {
                     this.AddUserOnline(u);
-                }
+                } 
             }
-
-            // Remove offline user requested
-            requests = requests.FindAll(e => online.Contains(e));
         }
 
         public void AddUser(User u)
@@ -100,7 +99,6 @@ namespace Client.Windows
             this.dest.Add(u, chatService);
 
             CreateTag(u.Username);
-            UpdateChatUsersGUI();
         }
 
         public void AddUserOnline(User u)
@@ -110,18 +108,6 @@ namespace Client.Windows
                 onlinelist.Add(GetOnlineGUI(u));
                 onlinelist.ShowAll();
             });
-        }
-
-        public void RemoveUser(User u)
-        {
-            dest.Remove(u);
-            if (dest.Count == 0)
-            {
-                WindowManager.getInstance().LeaveChat(guid);
-            } else
-            {
-                UpdateChatUsersGUI();
-            }
         }
 
         private void UpdateChatUsersGUI()
@@ -164,6 +150,8 @@ namespace Client.Windows
 
             Gtk.Application.Invoke(delegate
             {
+                if (tags.Contains(name)) return;
+
                 Gdk.Color c = new Gdk.Color(
                     Convert.ToByte(r.Next(0, 256)),
                     Convert.ToByte(r.Next(0, 256)),
@@ -178,6 +166,8 @@ namespace Client.Windows
                 usersview.Buffer.TagTable.Add(tag1);
                 tag1.ForegroundGdk = c;
                 tag1.Weight = Pango.Weight.Bold;
+
+                tags.Add(name);
             });
         }
 
@@ -244,7 +234,7 @@ namespace Client.Windows
                 UseUnderline = true,
                 Label = global::Mono.Unix.Catalog.GetString("Add")
             };
-            if (this.requests.Contains(u))
+            if (chatManagerServer.GetRequests(this.guid).Contains(u))
             {
                 button.Sensitive = false;
             }
@@ -269,16 +259,14 @@ namespace Client.Windows
             if (user == null) return;
             string url = $"tcp://localhost:{user.Port}/GroupRequest";
 
-            foreach(IChat ichat in dest.Values)
+            IGroupRequest request = (IGroupRequest)Activator.GetObject(typeof(IGroupRequest), url);
+            request.MakeRequest(this.guid, src, user);
+            chatManagerServer.AddRequest(guid, user);
+
+            foreach (IChat ichat in dest.Values)
             {
                 ichat.RequestMade(this.guid, user);
             }
-
-            IGroupRequest request = (IGroupRequest)Activator.GetObject(typeof(IGroupRequest), url);
-            List<User> all = new List<User>(dest.Keys);
-            all.Add(src);
-            request.MakeRequest(this.guid, all, user);
-            this.requests.Add(user);
 
             Console.WriteLine("[Request Add] {0}", user.Username);
 
@@ -290,13 +278,12 @@ namespace Client.Windows
 
         public void AddRequest(User u)
         {
-            this.requests.Add(u);
-            Refresh();
+            Refresh(WindowManager.getInstance().usersWindow.online);
         }
 
-        private void Refresh()
+        public void Refresh(List<User> online)
         {
-            UpdateUsers(WindowManager.getInstance().usersWindow.online);
+            UpdateUsers(online);
         }
     }
 }

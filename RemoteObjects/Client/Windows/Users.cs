@@ -12,8 +12,11 @@ namespace Client.Windows
     {
         private readonly User user;
         private readonly AuthServer authServer;
+        private readonly ChatManagerServer chatManagerServer;
+
         public List<User> online { get; }
         private List<(User, IRequestCallback)> requests; //Requests received
+        private List<(Guid, User)> groupRequests; //Requests received
         private List<User> requested; //Requests made
 
         public Users(User user) :
@@ -23,6 +26,7 @@ namespace Client.Windows
             this.Build();
             this.online = new List<User>();
             this.requests = new List<(User, IRequestCallback)>();
+            this.groupRequests = new List<(Guid, User)>();
             this.requested = new List<User>();
 
             this.user = user;
@@ -32,46 +36,15 @@ namespace Client.Windows
             authServer = new AuthServer();
             authServer.AddOnlineHandler(new OnlineHandler(UpdateOnlineList));
 
+            chatManagerServer = new ChatManagerServer();
+
             UpdateOnlineList(authServer.GetOnline());
-        }
-
-        public void PrintState()
-        {
-            //Console.WriteLine("--------Start---------");
-            //if (this.requests.Count != 0)
-            //{
-            //    Console.WriteLine("[Requests List]");
-            //    foreach (var item in this.requests)
-            //    {
-            //        Console.WriteLine("> " + item.Item1.Username);
-            //    }
-            //}
-
-            //if (this.requested.Count != 0)
-            //{
-            //    Console.WriteLine("[Resquested List]");
-            //    foreach (var user in this.requested)
-            //    {
-            //        Console.WriteLine("> " + user.Username);
-            //    }
-            //}
-
-            //Dictionary<Guid, Chat> chatWindows = WindowManager.getInstance().GetChats();
-            //if(chatWindows.Count != 0)
-            //{
-            //    Console.WriteLine("[Chatting List]");
-            //    foreach (var chat in chatWindows)
-            //    {
-            //        //Console.WriteLine("> " + chat.Value.GetDest().Username);
-            //    }
-            //}
-
-            //Console.WriteLine("---------End----------");
         }
 
         protected void OnDeleteEvent(object o, Gtk.DeleteEventArgs args)
         {
             authServer.Logout(user.Username);
+            WindowManager.getInstance().Logout(user);
             Application.Quit(); 
             args.RetVal = true;
         }
@@ -79,6 +52,7 @@ namespace Client.Windows
         protected void OnLogoutClicked(object sender, EventArgs e)
         {
             authServer.Logout(user.Username);
+            WindowManager.getInstance().Logout(user);
             Application.Quit();
         }
 
@@ -116,26 +90,32 @@ namespace Client.Windows
                 this.AddUserOnline(u);
             }
 
-            // Update Chat Windows
-            WindowManager.getInstance().UpdateChatWindows(temp);
-
             // Remove offline users from requests
-            if (requests.Count == 0) return;
-            List<(User, IRequestCallback)> temp1 = requests.FindAll(e => online.Contains(e.Item1));
-            Gtk.Application.Invoke(delegate
+            if (requests.Count != 0 || groupRequests.Count != 0)
             {
-                requestList.Forall(w => w.Destroy());
-            });
-            requests.Clear();
-            foreach ((User u, IRequestCallback cb) in temp1)
-            {
-                this.AddRequest(u, cb);
+                Gtk.Application.Invoke(delegate
+                {
+                    requestList.Forall(w => w.Destroy());
+                });
+
+                groupRequests.RemoveAll(r => !chatManagerServer.ChatExists(r.Item1));
+                foreach ((Guid guid, User user) in groupRequests)
+                {
+                    this.AddGroupChatRequest(guid, user);
+                }
+
+                List<(User, IRequestCallback)> temp1 = requests.FindAll(e => online.Contains(e.Item1));
+                requests.Clear();
+                foreach ((User u, IRequestCallback cb) in temp1)
+                {
+                    this.AddRequest(u, cb);
+                }
             }
 
             // Remove offline user requested
             requested = requested.FindAll(e => online.Contains(e));
 
-            this.PrintState();
+            WindowManager.getInstance().UpdateChats(users);
         }
 
         private global::Gtk.HBox GetOnlineGUI(User u)
@@ -271,6 +251,99 @@ namespace Client.Windows
             w6.Fill = false;
 
             return request;
+        }
+
+        private global::Gtk.HBox GetGroupChatRequestGUI(Guid guid, User src)
+        {
+            global::Gtk.HBox request = new global::Gtk.HBox
+            {
+                Spacing = 6
+            };
+            // Container child request.Gtk.Box+BoxChild
+            global::Gtk.Label label = new global::Gtk.Label
+            {
+                LabelProp = global::Mono.Unix.Catalog.GetString("Group Chat with " + src.Username)
+            };
+            request.Add(label);
+
+            global::Gtk.Box.BoxChild bc1 = ((global::Gtk.Box.BoxChild)(request[label]));
+            bc1.Position = 0;
+            // Container child request.Gtk.Box+BoxChild
+            global::Gtk.Button button1 = new global::Gtk.Button
+            {
+                CanFocus = true,
+                UseUnderline = true,
+                Label = global::Mono.Unix.Catalog.GetString("Accept")
+            };
+            button1.Clicked += (s, e) => {
+                request.Destroy();
+                groupRequests.RemoveAll(t => t.Item1.Equals(guid));
+
+                if(chatManagerServer.ChatExists(guid))
+                {
+                    chatManagerServer.RemoveRequest(guid, this.user);
+                    chatManagerServer.AddUserToChat(guid, this.user);
+                    WindowManager.getInstance().GroupChatAccepted(guid, this.user);
+
+                    List<User> chatUsers = chatManagerServer.GetUsersInChat(guid);
+                    foreach (User u in chatUsers)
+                    {
+                        if (u.Equals(this.user)) continue;
+                        string url = $"tcp://localhost:{u.Port}/GroupRequest";
+                        IGroupRequest gr = (IGroupRequest)Activator.GetObject(typeof(IGroupRequest), url);
+                        gr.GroupRequestAccepted(guid, this.user);
+                    }
+                }
+                Refresh();
+            };
+            request.Add(button1);
+
+            global::Gtk.Box.BoxChild bc2 = ((global::Gtk.Box.BoxChild)(request[button1]));
+            bc2.Position = 1;
+            bc2.Expand = false;
+            bc2.Fill = false;
+            // Container child request.Gtk.Box+BoxChild
+            global::Gtk.Button button2 = new global::Gtk.Button
+            {
+                CanFocus = true,
+                Name = "button7",
+                UseUnderline = true,
+                Label = global::Mono.Unix.Catalog.GetString("Refuse")
+            };
+            button2.Clicked += (s, e) => {
+                request.Destroy();
+                groupRequests.RemoveAll(t => t.Item1.Equals(guid));
+
+                if(chatManagerServer.ChatExists(guid))
+                {
+                    chatManagerServer.RemoveRequest(guid, this.user);
+                    List<User> chatUsers = chatManagerServer.GetUsersInChat(guid);
+                    foreach(User u in chatUsers)
+                    {
+                        string url = $"tcp://localhost:{u.Port}/GroupRequest";
+                        IGroupRequest gr = (IGroupRequest)Activator.GetObject(typeof(IGroupRequest), url);
+                        gr.GroupRequestRefused(guid, this.user);
+                    }
+                }
+                Refresh();
+            };
+            request.Add(button2);
+
+            global::Gtk.Box.BoxChild w6 = ((global::Gtk.Box.BoxChild)(request[button2]));
+            w6.Position = 2;
+            w6.Expand = false;
+            w6.Fill = false;
+
+            return request;
+        }
+
+        public void AddGroupChatRequest(Guid guid, User src)
+        {
+            Gtk.Application.Invoke(delegate
+            {
+                requestList.Add(GetGroupChatRequestGUI(guid, src));
+                requestList.ShowAll();
+            });
         }
 
         public void RemoveRequested(User u)

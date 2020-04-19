@@ -15,12 +15,12 @@ namespace Client.Services
 
         public void Exit(Guid guid, User src)
         {
-            WindowManager.getInstance().LeaveChat(guid, src);
+            WindowManager.getInstance().UpdateChat(guid);
         }
 
         public void RequestMade(Guid guid, User u)
         {
-            WindowManager.getInstance().GroupRequestMade(guid, u);
+            WindowManager.getInstance().UpdateChat(guid);
         }
     }
 }

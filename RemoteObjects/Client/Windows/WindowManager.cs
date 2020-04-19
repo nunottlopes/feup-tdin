@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Client.ServerServices;
 using Common.Authentication;
 using Common.Messages;
 
@@ -20,6 +21,8 @@ namespace Client.Windows
 
             return instance;
         }
+
+        private ChatManagerServer chatManagerServer;
 
         private Auth authWindow;
         private Register registerWindow;
@@ -57,11 +60,17 @@ namespace Client.Windows
             if(state == State.LOGIN)
             {
                 authWindow.Destroy();
+                chatManagerServer = new ChatManagerServer();
                 chatWindows = new Dictionary<Guid, Chat>();
                 usersWindow = new Users(user);
                 usersWindow.Show();
                 state = State.USERS;
             }
+        }
+
+        public void Logout(User user)
+        {
+            chatManagerServer.RemoveUser(user);
         }
 
         public void RequestReceived(User src, IRequestCallback callback)
@@ -75,15 +84,25 @@ namespace Client.Windows
 
         public void RequestAccepted(Guid guid, User src, User dest)
         {
-            Console.WriteLine("[Chatting]");
-            usersWindow.RemoveRequested(dest);
+            Console.WriteLine("[Chatting] {0}", dest.Username);
             Gtk.Application.Invoke(delegate
             {
-                Chat chat = new Chat(guid, src, dest);
-                chat.UpdateUsers(usersWindow.online);
+                chatManagerServer.AddChat(guid, new List<User> { src, dest });
+                Chat chat = new Chat(guid, src);
                 chatWindows.Add(guid, chat);
                 chat.Show();
+                usersWindow.RemoveRequested(dest);
             }); 
+        }
+
+        public void GroupChatAccepted(Guid guid, User src)
+        {
+            Gtk.Application.Invoke(delegate
+            {
+                Chat chat = new Chat(guid, src);
+                chatWindows.Add(guid, chat);
+                chat.Show();
+            });
         }
 
         public void RequestRefused(User src, User dest)
@@ -96,7 +115,7 @@ namespace Client.Windows
             chatWindows[msg.guid].AddMessage(msg);
         }
 
-        public void LeaveChat(Guid guid)
+        public void LeaveChat(Guid guid, User u)
         {
             Console.WriteLine("[Leave Chat] {0}", guid);
             Gtk.Application.Invoke(delegate
@@ -106,27 +125,27 @@ namespace Client.Windows
             });
         }
 
-        internal void LeaveChat(Guid guid, User src)
+        public void UpdateChats(List<User> online)
         {
-            chatWindows[guid].RemoveUser(src);
-        }
-
-        internal void JoinChat(Guid guid, User u)
-        {
-            chatWindows[guid].AddUser(u);
-        }
-
-        public void UpdateChatWindows(List<User> users)
-        {
-            foreach (KeyValuePair<Guid, Chat> pair in chatWindows)
+            foreach(Chat c in chatWindows.Values)
             {
-                pair.Value.UpdateUsers(users);
+                c.Refresh(online);
             }
+        }
+
+        public void UpdateChat(Guid guid)
+        {
+            chatWindows[guid].Refresh(usersWindow.online);
         }
 
         public Dictionary<Guid, Chat> GetChats()
         {
             return chatWindows;
+        }
+
+        internal void AddGroupChatRequest(Guid guid, User src, User dest)
+        {
+            usersWindow.AddGroupChatRequest(guid, src);
         }
 
         internal void GroupRequestMade(Guid guid, User u)

@@ -38,6 +38,7 @@
     <Compile Include="Database\DBManager.cs" />
     <Compile Include="Database\UserServer.cs" />
     <Compile Include="Services\Authentication.cs" />
+    <Compile Include="Services\ChatManager.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
