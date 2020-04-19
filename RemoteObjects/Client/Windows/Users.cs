@@ -115,7 +115,10 @@ namespace Client.Windows
             // Remove offline user requested
             requested = requested.FindAll(e => online.Contains(e));
 
-            WindowManager.getInstance().UpdateChats(users);
+            Gtk.Application.Invoke(delegate
+            {
+                WindowManager.getInstance().UpdateChats(users);
+            });
         }
 
         private global::Gtk.HBox GetOnlineGUI(User u)
