@@ -21,7 +21,7 @@ namespace Client.Windows
             args.RetVal = true;
         }
 
-        protected void OnRegisterClicked(object sender, EventArgs e)
+        private void RegisterAction()
         {
             bool res = authServer.Register(username.Text, name.Text, password.Text);
             if (!res)
@@ -35,9 +35,34 @@ namespace Client.Windows
             }
         }
 
+        protected void OnRegisterClicked(object sender, EventArgs e)
+        {
+            RegisterAction();
+        }
+
         protected void OnExitClicked(object sender, EventArgs e)
         {
             Application.Quit();
+        }
+
+        protected void OnFocusInEvent(object o, FocusInEventArgs args)
+        {
+            username.GrabFocus();
+        }
+
+        protected void OnUsernameActivated(object sender, EventArgs e)
+        {
+            name.GrabFocus();
+        }
+
+        protected void OnNameActivated(object sender, EventArgs e)
+        {
+            password.GrabFocus();
+        }
+
+        protected void OnPasswordActivated(object sender, EventArgs e)
+        {
+            RegisterAction();
         }
     }
 }

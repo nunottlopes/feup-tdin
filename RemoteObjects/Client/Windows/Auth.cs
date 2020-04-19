@@ -74,5 +74,10 @@ namespace Client.Windows
         {
             password.GrabFocus();
         }
+
+        protected void OnFocusInEvent(object o, FocusInEventArgs args)
+        {
+            username.GrabFocus();
+        }
     }
 }

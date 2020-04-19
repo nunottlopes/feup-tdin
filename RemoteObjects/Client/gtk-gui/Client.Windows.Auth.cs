@@ -59,6 +59,7 @@ namespace Client.Windows
 			this.alignment1.BorderWidth = ((uint)(15));
 			// Container child alignment1.Gtk.Container+ContainerChild
 			this.vbox1 = new global::Gtk.VBox();
+			this.vbox1.Name = "vbox1";
 			this.vbox1.Spacing = 6;
 			// Container child vbox1.Gtk.Box+BoxChild
 			this.label5 = new global::Gtk.Label();
@@ -211,6 +212,7 @@ namespace Client.Windows
 			this.DefaultHeight = 194;
 			this.Show();
 			this.DeleteEvent += new global::Gtk.DeleteEventHandler(this.OnDeleteEvent);
+			this.FocusInEvent += new global::Gtk.FocusInEventHandler(this.OnFocusInEvent);
 			this.username.Activated += new global::System.EventHandler(this.OnUsernameActivated);
 			this.password.Activated += new global::System.EventHandler(this.OnPasswordActivated);
 			this.exit.Clicked += new global::System.EventHandler(this.OnExitClicked);

@@ -14,6 +14,7 @@
     <property name="Resizable">False</property>
     <property name="AllowGrow">False</property>
     <signal name="DeleteEvent" handler="OnDeleteEvent" />
+    <signal name="FocusInEvent" handler="OnFocusInEvent" />
     <child>
       <widget class="Gtk.Alignment" id="alignment1">
         <property name="MemberName" />
@@ -238,6 +239,7 @@
     <property name="Resizable">False</property>
     <property name="AllowGrow">False</property>
     <signal name="DeleteEvent" handler="OnDeleteEvent" />
+    <signal name="FocusInEvent" handler="OnFocusInEvent" />
     <child>
       <widget class="Gtk.Alignment" id="alignment1">
         <property name="MemberName" />
@@ -296,6 +298,7 @@
                     <property name="CanFocus">True</property>
                     <property name="IsEditable">True</property>
                     <property name="InvisibleChar">●</property>
+                    <signal name="Activated" handler="OnUsernameActivated" />
                   </widget>
                   <packing>
                     <property name="Position">1</property>
@@ -332,6 +335,7 @@
                     <property name="CanFocus">True</property>
                     <property name="IsEditable">True</property>
                     <property name="InvisibleChar">●</property>
+                    <signal name="Activated" handler="OnNameActivated" />
                   </widget>
                   <packing>
                     <property name="Position">1</property>
@@ -369,6 +373,7 @@
                     <property name="IsEditable">True</property>
                     <property name="Visibility">False</property>
                     <property name="InvisibleChar">●</property>
+                    <signal name="Activated" handler="OnPasswordActivated" />
                   </widget>
                   <packing>
                     <property name="Position">1</property>
