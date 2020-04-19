@@ -43,16 +43,16 @@ namespace Client.Windows
 
         protected void OnDeleteEvent(object o, Gtk.DeleteEventArgs args)
         {
-            authServer.Logout(user.Username);
             WindowManager.getInstance().Logout(user);
+            authServer.Logout(user.Username);
             Application.Quit(); 
             args.RetVal = true;
         }
 
         protected void OnLogoutClicked(object sender, EventArgs e)
         {
-            authServer.Logout(user.Username);
             WindowManager.getInstance().Logout(user);
+            authServer.Logout(user.Username);
             Application.Quit();
         }
 
