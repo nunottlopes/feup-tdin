@@ -271,7 +271,7 @@ namespace Client.Windows
             };
             global::Gtk.Label label = new global::Gtk.Label
             {
-                LabelProp = global::Mono.Unix.Catalog.GetString(u.Name)
+                LabelProp = u.Name
             };
             user.Add(label);
 
@@ -282,7 +282,7 @@ namespace Client.Windows
             {
                 CanFocus = true,
                 UseUnderline = true,
-                Label = global::Mono.Unix.Catalog.GetString("Add")
+                Label = "Add"
             };
             if (chatManagerServer.GetRequests(this.guid).Contains(u))
             {

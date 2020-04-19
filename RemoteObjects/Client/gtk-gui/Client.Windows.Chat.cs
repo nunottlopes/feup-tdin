@@ -45,7 +45,7 @@ namespace Client.Windows
 			global::Stetic.Gui.Initialize(this);
 			// Widget Client.Windows.Chat
 			this.Name = "Client.Windows.Chat";
-			this.Title = global::Mono.Unix.Catalog.GetString("Chat");
+			this.Title = "Chat";
 			this.WindowPosition = ((global::Gtk.WindowPosition)(4));
 			this.BorderWidth = ((uint)(3));
 			// Container child Client.Windows.Chat.Gtk.Container+ContainerChild
@@ -95,7 +95,7 @@ namespace Client.Windows
 			this.send.CanFocus = true;
 			this.send.Name = "send";
 			this.send.UseUnderline = true;
-			this.send.Label = global::Mono.Unix.Catalog.GetString("Send");
+			this.send.Label = "Send";
 			this.hbox2.Add(this.send);
 			global::Gtk.Box.BoxChild w4 = ((global::Gtk.Box.BoxChild)(this.hbox2[this.send]));
 			w4.Position = 1;
@@ -138,7 +138,7 @@ namespace Client.Windows
 			// Container child vbox4.Gtk.Box+BoxChild
 			this.label1 = new global::Gtk.Label();
 			this.label1.Name = "label1";
-			this.label1.LabelProp = global::Mono.Unix.Catalog.GetString("Chat Users");
+			this.label1.LabelProp = "Chat Users";
 			this.vbox4.Add(this.label1);
 			global::Gtk.Box.BoxChild w10 = ((global::Gtk.Box.BoxChild)(this.vbox4[this.label1]));
 			w10.Position = 0;
@@ -173,7 +173,7 @@ namespace Client.Windows
 			// Container child vbox4.Gtk.Box+BoxChild
 			this.label3 = new global::Gtk.Label();
 			this.label3.Name = "label3";
-			this.label3.LabelProp = global::Mono.Unix.Catalog.GetString("Online Users");
+			this.label3.LabelProp = "Online Users";
 			this.vbox4.Add(this.label3);
 			global::Gtk.Box.BoxChild w14 = ((global::Gtk.Box.BoxChild)(this.vbox4[this.label3]));
 			w14.Position = 3;
