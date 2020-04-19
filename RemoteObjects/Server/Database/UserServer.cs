@@ -20,6 +20,7 @@ namespace Server.Database
             this.Password = password;
             this.Online = false;
             this.Port = -1;
+            this.Address = "";
         }
 
         public UserServer(XmlNode xmlNode) :
@@ -32,6 +33,7 @@ namespace Server.Database
             this.Name = xmlNode.SelectSingleNode("name").InnerText;
             this.Online = false;
             this.Port = -1;
+            this.Address = "";
         }
 
         // Constructor for testing purposes
@@ -43,6 +45,7 @@ namespace Server.Database
             this.Name = null;
             this.Online = false;
             this.Port = -1;
+            this.Address = "";
         }
 
         public XmlNode ToXml(XmlDocument doc)
@@ -70,12 +73,12 @@ namespace Server.Database
 
         public User GetUser()
         {
-            return new User(this.Username, this.Name, this.Port);
+            return new User(this.Username, this.Name, this.Port, this.Address);
         }
 
         public override string ToString()
         {
-            return string.Format("[{0}] {1}:{2},{3} ({4})", this.Id, this.Username, this.Password, this.Name, this.Online);
+            return string.Format("[{0}] {1}:{2}, address:{3} {4} ({5})", this.Id, this.Username, this.Password, this.Address, this.Name, this.Online);
         }
     }
 }

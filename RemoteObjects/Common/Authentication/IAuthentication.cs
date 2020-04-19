@@ -10,7 +10,7 @@ namespace Common.Authentication
         event OnlineHandler OnlineChanged;
 
         bool Register(string username, string name, string password);
-        User Login(string username, string password, int Port);
+        User Login(string username, string password, int Port, string address);
         bool Logout(string username);
         List<User> GetOnline();
     }

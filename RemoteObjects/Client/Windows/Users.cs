@@ -181,7 +181,7 @@ namespace Client.Windows
             }
 
             if (user == null) return;
-            string url = $"tcp://localhost:{user.Port}/Request";
+            string url = $"tcp://{user.Address}:{user.Port}/Request";
 
             IRequest request = (IRequest)Activator.GetObject(typeof(IRequest), url);
             request.MakeRequest(this.user, user, new RequestCallback());
@@ -292,7 +292,7 @@ namespace Client.Windows
                     foreach (User u in chatUsers)
                     {
                         if (u.Equals(this.user)) continue;
-                        string url = $"tcp://localhost:{u.Port}/GroupRequest";
+                        string url = $"tcp://{u.Address}:{u.Port}/GroupRequest";
                         IGroupRequest gr = (IGroupRequest)Activator.GetObject(typeof(IGroupRequest), url);
                         gr.GroupRequestAccepted(guid, this.user);
                     }
@@ -323,7 +323,7 @@ namespace Client.Windows
                     List<User> chatUsers = chatManagerServer.GetUsersInChat(guid);
                     foreach(User u in chatUsers)
                     {
-                        string url = $"tcp://localhost:{u.Port}/GroupRequest";
+                        string url = $"tcp://{u.Address}:{u.Port}/GroupRequest";
                         IGroupRequest gr = (IGroupRequest)Activator.GetObject(typeof(IGroupRequest), url);
                         gr.GroupRequestRefused(guid, this.user);
                     }

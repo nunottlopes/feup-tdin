@@ -10,9 +10,9 @@ namespace Server.Services
     {
         public event OnlineHandler OnlineChanged;
 
-        public User Login(string username, string password, int port)
+        public User Login(string username, string password, int port, string address)
         {
-            Console.WriteLine("[Login] {0}:{1}", username, password);
+            Console.WriteLine("[Login] {0}:{1}, address: {2}", username, password, address);
             if (!DBManager.hasUsername(username))
             {
                 Console.WriteLine("[Login] User {0} doesn't exist", username);
@@ -35,6 +35,7 @@ namespace Server.Services
 
             user.Online = true;
             user.Port = port;
+            user.Address = address;
             Console.WriteLine("[Login] User {0} successfully logged in", username);
 
             OnLoginChange();

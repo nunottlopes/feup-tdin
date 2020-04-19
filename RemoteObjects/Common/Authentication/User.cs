@@ -8,12 +8,14 @@ namespace Common.Authentication
         public string Username { get; set; }
         public string Name { get; set; }
         public int Port { get; set; }
+        public string Address { get; set; }
 
-        public User(string username, string name, int port)
+        public User(string username, string name, int port, string address)
         {
             this.Username = username;
             this.Name = name;
             this.Port = port;
+            this.Address = address;
         }
 
         public User(string username, string name)
@@ -21,6 +23,7 @@ namespace Common.Authentication
             this.Username = username;
             this.Name = name;
             this.Port = 0;
+            this.Address = "";
         }
 
         public override string ToString()

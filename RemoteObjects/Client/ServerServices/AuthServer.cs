@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Net;
+using System.Net.Sockets;
 using System.Runtime.Remoting.Channels;
 using System.Runtime.Remoting.Channels.Tcp;
 using Client.Utils;
@@ -11,6 +13,7 @@ namespace Client.ServerServices
     {
         private readonly IAuthentication Auth;
         private readonly int Port;
+        private readonly string Address;
 
         private OnlineHandlerRepeater UsersOnlineRepeater;
         public event OnlineHandler OnlineChanged;
@@ -23,6 +26,7 @@ namespace Client.ServerServices
             TcpChannel chan = (TcpChannel)ChannelServices.GetChannel("tcp");
             ChannelDataStore data = (ChannelDataStore)chan.ChannelData;
             Port = new Uri(data.ChannelUris[0]).Port;
+            Address = GetLocalIPAddress();
 
             try
             {
@@ -34,10 +38,10 @@ namespace Client.ServerServices
             }
         }
 
-        public User Login(string username, string password, int port = 0)
+        public User Login(string username, string password, int port = 0, string address = "")
         {
             if (Auth == null) return null;
-            return Auth.Login(username, password, this.Port);
+            return Auth.Login(username, password, this.Port, this.Address);
         }
 
         public bool Register(string username, string name, string password)
@@ -69,6 +73,19 @@ namespace Client.ServerServices
             UsersOnlineRepeater.OnlineChanged += t1;
             t2 = new OnlineHandler(UsersOnlineRepeater.Repeater);
             Auth.OnlineChanged += t2;
+        }
+
+        public static string GetLocalIPAddress()
+        {
+            var host = Dns.GetHostEntry(Dns.GetHostName());
+            foreach (var ip in host.AddressList)
+            {
+                if (ip.AddressFamily == AddressFamily.InterNetwork)
+                {
+                    return ip.ToString();
+                }
+            }
+            return "localhost";
         }
     }
 }

@@ -94,7 +94,7 @@ namespace Client.Windows
 
         public void AddUser(User u)
         {
-            string url = $"tcp://localhost:{u.Port}/Chat";
+            string url = $"tcp://{u.Address}:{u.Port}/Chat";
             IChat chatService = (IChat)Activator.GetObject(typeof(IChat), url);
             this.dest.Add(u, chatService);
 
@@ -257,7 +257,7 @@ namespace Client.Windows
             User user = WindowManager.getInstance().usersWindow.online.Find(x => x.Username == username);
 
             if (user == null) return;
-            string url = $"tcp://localhost:{user.Port}/GroupRequest";
+            string url = $"tcp://{user.Address}:{user.Port}/GroupRequest";
 
             IGroupRequest request = (IGroupRequest)Activator.GetObject(typeof(IGroupRequest), url);
             request.MakeRequest(this.guid, src, user);
