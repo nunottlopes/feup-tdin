@@ -72,6 +72,7 @@ namespace Client.Windows
 			this.chatview.Name = "chatview";
 			this.chatview.Editable = false;
 			this.chatview.CursorVisible = false;
+			this.chatview.WrapMode = ((global::Gtk.WrapMode)(2));
 			this.scrolledwindow1.Add(this.chatview);
 			this.vbox2.Add(this.scrolledwindow1);
 			global::Gtk.Box.BoxChild w2 = ((global::Gtk.Box.BoxChild)(this.vbox2[this.scrolledwindow1]));
@@ -207,8 +208,8 @@ namespace Client.Windows
 			{
 				this.Child.ShowAll();
 			}
-			this.DefaultWidth = 543;
-			this.DefaultHeight = 331;
+			this.DefaultWidth = 563;
+			this.DefaultHeight = 377;
 			this.Show();
 			this.FocusInEvent += new global::Gtk.FocusInEventHandler(this.OnFocusInEvent);
 			this.DeleteEvent += new global::Gtk.DeleteEventHandler(this.OnDeleteEvent);

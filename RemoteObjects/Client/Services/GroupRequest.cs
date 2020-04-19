@@ -9,7 +9,7 @@ namespace Client.Services
     {
         public void MakeRequest(Guid guid, User src, User dest)
         {
-            Console.WriteLine("Group request received from {0}", src);
+            Console.WriteLine("Group request received from {0}", src.Username);
             WindowManager.getInstance().AddGroupChatRequest(guid, src, dest);
         }
 

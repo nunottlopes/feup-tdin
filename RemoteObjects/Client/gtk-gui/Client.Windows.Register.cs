@@ -49,7 +49,7 @@ namespace Client.Windows
 			global::Stetic.Gui.Initialize(this);
 			// Widget Client.Windows.Register
 			this.Name = "Client.Windows.Register";
-			this.Title = global::Mono.Unix.Catalog.GetString("TDIN");
+			this.Title = global::Mono.Unix.Catalog.GetString("TDIN IRC");
 			this.WindowPosition = ((global::Gtk.WindowPosition)(4));
 			this.Resizable = false;
 			this.AllowGrow = false;

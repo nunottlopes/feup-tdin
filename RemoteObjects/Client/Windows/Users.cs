@@ -31,7 +31,7 @@ namespace Client.Windows
 
             this.user = user;
 
-            this.Title = user.Username;
+            this.Title = user.Name;
 
             authServer = new AuthServer();
             authServer.AddOnlineHandler(new OnlineHandler(UpdateOnlineList));
@@ -130,7 +130,7 @@ namespace Client.Windows
             };
             global::Gtk.Label label = new global::Gtk.Label
             {
-                LabelProp = global::Mono.Unix.Catalog.GetString(u.Username)
+                LabelProp = global::Mono.Unix.Catalog.GetString(u.Name)
             };
             user.Add(label);
 
@@ -205,7 +205,7 @@ namespace Client.Windows
             // Container child request.Gtk.Box+BoxChild
             global::Gtk.Label label = new global::Gtk.Label
             {
-                LabelProp = global::Mono.Unix.Catalog.GetString(u.Username)
+                LabelProp = global::Mono.Unix.Catalog.GetString("Chat with " + u.Name)
             };
             request.Add(label);
 
@@ -265,7 +265,7 @@ namespace Client.Windows
             // Container child request.Gtk.Box+BoxChild
             global::Gtk.Label label = new global::Gtk.Label
             {
-                LabelProp = global::Mono.Unix.Catalog.GetString("Group Chat with " + src.Username)
+                LabelProp = global::Mono.Unix.Catalog.GetString("Group Chat with " + src.Name)
             };
             request.Add(label);
 

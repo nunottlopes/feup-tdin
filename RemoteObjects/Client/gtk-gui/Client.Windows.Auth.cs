@@ -45,7 +45,7 @@ namespace Client.Windows
 			global::Stetic.Gui.Initialize(this);
 			// Widget Client.Windows.Auth
 			this.Name = "Client.Windows.Auth";
-			this.Title = global::Mono.Unix.Catalog.GetString("TDIN");
+			this.Title = global::Mono.Unix.Catalog.GetString("TDIN IRC");
 			this.WindowPosition = ((global::Gtk.WindowPosition)(4));
 			this.Resizable = false;
 			this.AllowGrow = false;
