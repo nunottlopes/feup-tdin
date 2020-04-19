@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using Client.ServerServices;
 using Common.Authentication;
@@ -173,38 +174,87 @@ namespace Client.Windows
 
         protected void OnSendClicked(object sender, EventArgs e)
         {
-            SendMessage();
+            SendTextMessage();
         }
 
         protected void OnMessageActivated(object sender, EventArgs e)
         {
-            SendMessage();
+            SendTextMessage();
         }
 
-        private void SendMessage()
+        private void SendMessage(Message msg)
+        {
+            foreach (IChat chatService in dest.Values)
+            {
+                chatService.Send(msg);
+            }
+            AddMessage(msg);
+        }
+
+        private void SendTextMessage()
         {
             if (message.Text.Trim() == "") return;
 
-            foreach(IChat chatService in dest.Values)
-            {
-                chatService.Send(new Message(guid, src, message.Text));
-            }
-            AddMessage(new Message(guid, src, message.Text));
+            SendMessage(new Message(guid, src, message.Text, Message.Type.TEXT));
             message.Text = "";
         }
 
         public void AddMessage(Message msg)
         {
-            string header = msg.src.Username + ": ";
-            string main = msg.content + "\n";
-
-            Gtk.Application.Invoke(delegate
+            if(msg.messageType == Message.Type.TEXT)
             {
-                Gtk.TextIter iter = chatview.Buffer.EndIter;
+                string header = msg.src.Username + ": ";
+                string main = msg.content + "\n";
 
-                chatview.Buffer.InsertWithTagsByName(ref iter, header, msg.src.Username);
-                chatview.Buffer.InsertWithTagsByName(ref iter, main, "default");
-            });
+                Gtk.Application.Invoke(delegate
+                {
+                    Gtk.TextIter iter = chatview.Buffer.EndIter;
+
+                    chatview.Buffer.InsertWithTagsByName(ref iter, header, msg.src.Username);
+                    chatview.Buffer.InsertWithTagsByName(ref iter, main, "default");
+                });
+            } else
+            {
+                Console.WriteLine("[Received File] {0}", msg.fileName);
+                string header = msg.src.Username + ": ";
+
+                Gtk.Application.Invoke(delegate
+                {
+                    Gtk.TextIter iter = chatview.Buffer.EndIter;
+
+                    chatview.Buffer.InsertWithTagsByName(ref iter, header, msg.src.Username);
+                    string a = "Received File: ";
+                    if(msg.src == src)
+                    {
+                        a = "Sent File: ";
+                    }
+                    chatview.Buffer.InsertWithTagsByName(ref iter, a, "default");
+                    Gtk.EventBox eb = new Gtk.EventBox();
+                    eb.ButtonPressEvent += (s, e) => SaveFile(msg);
+                    Gtk.Label label = new Gtk.Label(msg.fileName);
+                    eb.Add(label);
+                    Gtk.TextChildAnchor anchor = chatview.Buffer.CreateChildAnchor(ref iter);
+                    chatview.AddChildAtAnchor(eb, anchor);
+                    eb.ShowAll();
+                    chatview.Buffer.InsertWithTagsByName(ref iter, "\n", "default");
+                });
+            }
+        }
+
+        private void SaveFile(Message msg)
+        {
+            Gtk.FileChooserDialog fcd = new Gtk.FileChooserDialog("Save File", null, Gtk.FileChooserAction.SelectFolder);
+            fcd.AddButton(Gtk.Stock.Cancel, Gtk.ResponseType.Cancel);
+            fcd.AddButton(Gtk.Stock.Save, Gtk.ResponseType.Ok);
+            fcd.DefaultResponse = Gtk.ResponseType.Ok;
+            fcd.SelectMultiple = false;
+
+            Gtk.ResponseType response = (Gtk.ResponseType)fcd.Run();
+            if (response == Gtk.ResponseType.Ok)
+            {
+                File.WriteAllBytes(fcd.Filename + "/" + msg.fileName, msg.file);
+            }
+            fcd.Destroy();
         }
 
         protected void OnChatviewSizeAllocated(object o, Gtk.SizeAllocatedArgs args)
@@ -284,6 +334,27 @@ namespace Client.Windows
         public void Refresh(List<User> online)
         {
             UpdateUsers(online);
+        }
+
+        protected void OnSendFileClicked(object sender, EventArgs e)
+        {
+            Gtk.FileChooserDialog fcd = new Gtk.FileChooserDialog("Send File", null, Gtk.FileChooserAction.Open);
+            fcd.AddButton(Gtk.Stock.Cancel, Gtk.ResponseType.Cancel);
+            fcd.AddButton(Gtk.Stock.Open, Gtk.ResponseType.Ok);
+            fcd.DefaultResponse = Gtk.ResponseType.Ok;
+            fcd.SelectMultiple = false;
+
+            Gtk.ResponseType response = (Gtk.ResponseType)fcd.Run();
+            if (response == Gtk.ResponseType.Ok)
+            {
+                string[] split = fcd.Filename.Split('/');
+                string fileName = split[split.Length - 1];
+                byte[] file = File.ReadAllBytes(fcd.Filename);
+                Message msg = new Message(guid, src, fileName, file, Message.Type.FILE);
+                SendMessage(msg);
+                Console.WriteLine("[Sent File] {0}", fileName);
+            }
+            fcd.Destroy();
         }
     }
 }
