@@ -347,8 +347,7 @@ namespace Client.Windows
             Gtk.ResponseType response = (Gtk.ResponseType)fcd.Run();
             if (response == Gtk.ResponseType.Ok)
             {
-                string[] split = fcd.Filename.Split('/');
-                string fileName = split[split.Length - 1];
+                string fileName = System.IO.Path.GetFileName(fcd.Filename);
                 byte[] file = File.ReadAllBytes(fcd.Filename);
                 Message msg = new Message(guid, src, fileName, file, Message.Type.FILE);
                 SendMessage(msg);
