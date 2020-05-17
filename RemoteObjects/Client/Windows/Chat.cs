@@ -118,18 +118,18 @@ namespace Client.Windows
                 usersview.Buffer.Text = "";
                 Gtk.TextIter iter = usersview.Buffer.EndIter;
 
-                string text = src.Username + " (me)\n";
+                string text = src.Name + " (me)\n";
                 usersview.Buffer.InsertWithTagsByName(ref iter, text, src.Username);
 
                 foreach (User u in dest.Keys)
                 {
-                    text = u.Username + "\n";
+                    text = u.Name + "\n";
                     usersview.Buffer.InsertWithTagsByName(ref iter, text, u.Username);
                 }
 
                 if(dest.Count == 1)
                 {
-                    this.Title = "Chat - " + dest.First().Key.Username;
+                    this.Title = "Chat - " + dest.First().Key.Name;
                 } else
                 {
                     this.Title = "Group Chat";
@@ -271,7 +271,7 @@ namespace Client.Windows
             };
             global::Gtk.Label label = new global::Gtk.Label
             {
-                LabelProp = global::Mono.Unix.Catalog.GetString(u.Username)
+                LabelProp = u.Name
             };
             user.Add(label);
 
@@ -282,7 +282,7 @@ namespace Client.Windows
             {
                 CanFocus = true,
                 UseUnderline = true,
-                Label = global::Mono.Unix.Catalog.GetString("Add")
+                Label = "Add"
             };
             if (chatManagerServer.GetRequests(this.guid).Contains(u))
             {
@@ -347,8 +347,7 @@ namespace Client.Windows
             Gtk.ResponseType response = (Gtk.ResponseType)fcd.Run();
             if (response == Gtk.ResponseType.Ok)
             {
-                string[] split = fcd.Filename.Split('/');
-                string fileName = split[split.Length - 1];
+                string fileName = System.IO.Path.GetFileName(fcd.Filename);
                 byte[] file = File.ReadAllBytes(fcd.Filename);
                 Message msg = new Message(guid, src, fileName, file, Message.Type.FILE);
                 SendMessage(msg);

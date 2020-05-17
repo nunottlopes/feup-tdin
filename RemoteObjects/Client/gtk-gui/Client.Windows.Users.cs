@@ -33,7 +33,7 @@ namespace Client.Windows
 			global::Stetic.Gui.Initialize(this);
 			// Widget Client.Windows.Users
 			this.Name = "Client.Windows.Users";
-			this.Title = global::Mono.Unix.Catalog.GetString("Users");
+			this.Title = "Users";
 			this.WindowPosition = ((global::Gtk.WindowPosition)(4));
 			// Container child Client.Windows.Users.Gtk.Container+ContainerChild
 			this.alignment1 = new global::Gtk.Alignment(0.5F, 0.5F, 1F, 1F);
@@ -58,7 +58,7 @@ namespace Client.Windows
 			// Container child vbox1.Gtk.Box+BoxChild
 			this.label1 = new global::Gtk.Label();
 			this.label1.Name = "label1";
-			this.label1.LabelProp = global::Mono.Unix.Catalog.GetString("Message Requests");
+			this.label1.LabelProp = "Message Requests";
 			this.vbox1.Add(this.label1);
 			global::Gtk.Box.BoxChild w2 = ((global::Gtk.Box.BoxChild)(this.vbox1[this.label1]));
 			w2.Position = 1;
@@ -90,7 +90,7 @@ namespace Client.Windows
 			// Container child vbox1.Gtk.Box+BoxChild
 			this.label3 = new global::Gtk.Label();
 			this.label3.Name = "label3";
-			this.label3.LabelProp = global::Mono.Unix.Catalog.GetString("Users Online");
+			this.label3.LabelProp = "Users Online";
 			this.vbox1.Add(this.label3);
 			global::Gtk.Box.BoxChild w6 = ((global::Gtk.Box.BoxChild)(this.vbox1[this.label3]));
 			w6.Position = 5;
@@ -124,7 +124,7 @@ namespace Client.Windows
 			this.logout.CanFocus = true;
 			this.logout.Name = "logout";
 			this.logout.UseUnderline = true;
-			this.logout.Label = global::Mono.Unix.Catalog.GetString("Logout");
+			this.logout.Label = "Logout";
 			this.vbox1.Add(this.logout);
 			global::Gtk.Box.BoxChild w10 = ((global::Gtk.Box.BoxChild)(this.vbox1[this.logout]));
 			w10.Position = 9;

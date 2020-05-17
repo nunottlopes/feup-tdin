@@ -31,7 +31,7 @@ namespace Client.Windows
 
             this.user = user;
 
-            this.Title = user.Username;
+            this.Title = user.Name;
 
             authServer = new AuthServer();
             authServer.AddOnlineHandler(new OnlineHandler(UpdateOnlineList));
@@ -45,7 +45,7 @@ namespace Client.Windows
         {
             WindowManager.getInstance().Logout(user);
             authServer.Logout(user.Username);
-            Application.Quit(); 
+            Application.Quit();
             args.RetVal = true;
         }
 
@@ -130,7 +130,7 @@ namespace Client.Windows
             };
             global::Gtk.Label label = new global::Gtk.Label
             {
-                LabelProp = global::Mono.Unix.Catalog.GetString(u.Username)
+                LabelProp = u.Name
             };
             user.Add(label);
 
@@ -154,7 +154,7 @@ namespace Client.Windows
                 msg = "Request";
             }
 
-            button.Label = global::Mono.Unix.Catalog.GetString(msg);
+            button.Label = msg;
             button.Clicked += RequestMessageClicked;
             user.Add(button);
 
@@ -192,7 +192,7 @@ namespace Client.Windows
             Gtk.Application.Invoke(delegate
             {
                 ((Button)sender).Sensitive = false;
-                ((Button)sender).Label = global::Mono.Unix.Catalog.GetString("Requested");
+                ((Button)sender).Label = "Requested";
             });
         }
 
@@ -205,7 +205,7 @@ namespace Client.Windows
             // Container child request.Gtk.Box+BoxChild
             global::Gtk.Label label = new global::Gtk.Label
             {
-                LabelProp = global::Mono.Unix.Catalog.GetString(u.Username)
+                LabelProp = "Chat with " + u.Name
             };
             request.Add(label);
 
@@ -216,7 +216,7 @@ namespace Client.Windows
             {
                 CanFocus = true,
                 UseUnderline = true,
-                Label = global::Mono.Unix.Catalog.GetString("Accept")
+                Label = "Accept"
             };
             button1.Clicked += (s, e) => {
                 request.Destroy();
@@ -238,7 +238,7 @@ namespace Client.Windows
                 CanFocus = true,
                 Name = "button7",
                 UseUnderline = true,
-                Label = global::Mono.Unix.Catalog.GetString("Refuse")
+                Label = "Refuse"
             };
             button2.Clicked += (s, e) => {
                 request.Destroy();
@@ -265,7 +265,7 @@ namespace Client.Windows
             // Container child request.Gtk.Box+BoxChild
             global::Gtk.Label label = new global::Gtk.Label
             {
-                LabelProp = global::Mono.Unix.Catalog.GetString("Group Chat with " + src.Username)
+                LabelProp = "Group Chat with " + src.Name
             };
             request.Add(label);
 
@@ -276,7 +276,7 @@ namespace Client.Windows
             {
                 CanFocus = true,
                 UseUnderline = true,
-                Label = global::Mono.Unix.Catalog.GetString("Accept")
+                Label = "Accept"
             };
             button1.Clicked += (s, e) => {
                 request.Destroy();
@@ -311,7 +311,7 @@ namespace Client.Windows
                 CanFocus = true,
                 Name = "button7",
                 UseUnderline = true,
-                Label = global::Mono.Unix.Catalog.GetString("Refuse")
+                Label = "Refuse"
             };
             button2.Clicked += (s, e) => {
                 request.Destroy();

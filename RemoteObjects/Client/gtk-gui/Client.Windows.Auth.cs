@@ -45,7 +45,7 @@ namespace Client.Windows
 			global::Stetic.Gui.Initialize(this);
 			// Widget Client.Windows.Auth
 			this.Name = "Client.Windows.Auth";
-			this.Title = global::Mono.Unix.Catalog.GetString("TDIN");
+			this.Title = "TDIN IRC";
 			this.WindowPosition = ((global::Gtk.WindowPosition)(4));
 			this.Resizable = false;
 			this.AllowGrow = false;
@@ -64,7 +64,7 @@ namespace Client.Windows
 			// Container child vbox1.Gtk.Box+BoxChild
 			this.label5 = new global::Gtk.Label();
 			this.label5.Name = "label5";
-			this.label5.LabelProp = global::Mono.Unix.Catalog.GetString("Login");
+			this.label5.LabelProp = "Login";
 			this.label5.Justify = ((global::Gtk.Justification)(2));
 			this.vbox1.Add(this.label5);
 			global::Gtk.Box.BoxChild w1 = ((global::Gtk.Box.BoxChild)(this.vbox1[this.label5]));
@@ -85,7 +85,7 @@ namespace Client.Windows
 			// Container child hbox1.Gtk.Box+BoxChild
 			this.label1 = new global::Gtk.Label();
 			this.label1.Name = "label1";
-			this.label1.LabelProp = global::Mono.Unix.Catalog.GetString("username:");
+			this.label1.LabelProp = "username:";
 			this.hbox1.Add(this.label1);
 			global::Gtk.Box.BoxChild w3 = ((global::Gtk.Box.BoxChild)(this.hbox1[this.label1]));
 			w3.Position = 0;
@@ -116,7 +116,7 @@ namespace Client.Windows
 			// Container child hbox3.Gtk.Box+BoxChild
 			this.label2 = new global::Gtk.Label();
 			this.label2.Name = "label2";
-			this.label2.LabelProp = global::Mono.Unix.Catalog.GetString("password:");
+			this.label2.LabelProp = "password:";
 			this.hbox3.Add(this.label2);
 			global::Gtk.Box.BoxChild w6 = ((global::Gtk.Box.BoxChild)(this.hbox3[this.label2]));
 			w6.Position = 0;
@@ -168,7 +168,7 @@ namespace Client.Windows
 			this.exit.CanFocus = true;
 			this.exit.Name = "exit";
 			this.exit.UseUnderline = true;
-			this.exit.Label = global::Mono.Unix.Catalog.GetString("Exit");
+			this.exit.Label = "Exit";
 			this.hbox7.Add(this.exit);
 			global::Gtk.Box.BoxChild w12 = ((global::Gtk.Box.BoxChild)(this.hbox7[this.exit]));
 			w12.Position = 0;
@@ -183,7 +183,7 @@ namespace Client.Windows
 			this.login.CanFocus = true;
 			this.login.Name = "login";
 			this.login.UseUnderline = true;
-			this.login.Label = global::Mono.Unix.Catalog.GetString("Login");
+			this.login.Label = "Login";
 			this.hbox7.Add(this.login);
 			global::Gtk.Box.BoxChild w14 = ((global::Gtk.Box.BoxChild)(this.hbox7[this.login]));
 			w14.Position = 2;
@@ -192,7 +192,7 @@ namespace Client.Windows
 			this.register.CanFocus = true;
 			this.register.Name = "register";
 			this.register.UseUnderline = true;
-			this.register.Label = global::Mono.Unix.Catalog.GetString("Register");
+			this.register.Label = "Register";
 			this.hbox7.Add(this.register);
 			global::Gtk.Box.BoxChild w15 = ((global::Gtk.Box.BoxChild)(this.hbox7[this.register]));
 			w15.Position = 3;
