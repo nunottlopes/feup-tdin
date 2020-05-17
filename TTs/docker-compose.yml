@@ -21,10 +21,24 @@ services:
 
   server:
     build: ./server
+    restart: always
     volumes:
-      - ./server/:/usr/src/app
+      - ./server:/usr/src/app
       - /usr/src/app/node_modules
     ports:
       - 3001:3001
     depends_on:
       - mongo
+
+  webapp:
+    build: ./webapp
+    restart: always
+    stdin_open: true
+    ports:
+      - 3000:3000
+    volumes:
+      - ./webapp:/usr/src/app
+      - /usr/src/app/node_modules
+    depends_on:
+      - mongo
+      - server
