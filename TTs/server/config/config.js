@@ -1,7 +1,7 @@
+require("dotenv").config();
+
 module.exports = {
     mongodb: {
-        url: process.env.MONGODB_URL,
-        dbName: process.env.MONGODB_DATABASE_NAME,
-        config: { useUnifiedTopology: true }
+        url: `mongodb://${process.env.MONGODB_ADDRESS}:${process.env.MONGODB_PORT}/${process.env.MONGODB_DATABASE_NAME}`
     }
 };

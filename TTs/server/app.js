@@ -1,6 +1,8 @@
 const express = require("express");
 var path = require("path");
 var cors = require("cors");
+var mongoose = require("mongoose");
+const mongoUrl = require("./config/config").mongodb.url;
 
 const app = express();
 
@@ -15,8 +17,12 @@ app.use(
 );
 
 const indexRouter = require("./routes/index");
+const ticketRouter = require("./routes/ticket");
+const secondaryRouter = require("./routes/secondary");
 
 app.use("/api/", indexRouter);
+app.use("/api/ticket", ticketRouter);
+app.use("/api/secondary", secondaryRouter);
 
 if (process.env.NODE_ENV === "production") {
     app.use(express.static(path.join(__dirname, "./build")));
@@ -28,4 +34,16 @@ if (process.env.NODE_ENV === "production") {
 
 const PORT = process.env.NODE_ENV === "production" ? 8080 : 3001;
 
-app.listen(PORT, () => console.log(`Server NUNO listening on port ${PORT}!`));
+mongoose.set('useFindAndModify', false);
+mongoose.connect(mongoUrl, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true
+}, function (err, res) {
+    if (err) {
+        console.log('ERROR connecting to: ' + mongoUrl + '. ' + err);
+    } else {
+        console.log('Succeeded connected to: ' + mongoUrl);
+    }
+});
+
+app.listen(PORT, () => console.log(`Server listening on port ${PORT}!`));
