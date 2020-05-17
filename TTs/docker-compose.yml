@@ -19,13 +19,12 @@ services:
     depends_on:
       - mongo
 
-  # server:
-  #   build:
-  #     context: ./server
-  #   volumes:
-  #     - ./server/:/usr/scr/app
-  #     - /usr/scr/app/node_modules
-  #   ports:
-  #     - 3001:3001
-  #   depends_on:
-  #     - mongo
+  server:
+    build: ./server
+    volumes:
+      - ./server/:/usr/src/app
+      - /usr/src/app/node_modules
+    ports:
+      - 3001:3001
+    depends_on:
+      - mongo
