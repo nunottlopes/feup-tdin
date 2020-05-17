@@ -6,7 +6,7 @@ let TicketSchema = new mongoose.Schema({
     title: { type: String, required: true },
     description: { type: String, required: true },
     solver: { type: String, required: false },
-    response: { type: String, required: true },
+    response: { type: String, required: false },
     status: {
         type: String,
         enum: ["unassigned", "assigned", "waiting", "solved"],

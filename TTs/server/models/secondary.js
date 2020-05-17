@@ -6,7 +6,7 @@ let SecondarySchema = new mongoose.Schema({
     description: { type: String, required: true },
     solver: { type: String, required: true },
     department: { type: String, required: true },
-    response: { type: String, required: true },
+    response: { type: String, required: false },
     status: {
         type: String,
         enum: ["unsolved", "solved"],
