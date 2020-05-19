@@ -1,11 +1,12 @@
 import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import {
-    Container,
     Grid,
     TextField,
     Button,
     Snackbar,
+    Paper,
+    Typography
 } from "@material-ui/core";
 import {
     Alert
@@ -14,12 +15,18 @@ import { sendTicket } from "../ApiServices.js";
 
 
 const useStyles = makeStyles(() => ({
-    form: {
-        margin: "1em"
+    container: {
+        margin: "2em",
+        padding: "1em"
     },
 
     submit: {
         marginTop: "1em",
+    },
+
+    title: {
+        marginBottom: "1em",
+        color: "#3f51b5"
     }
 }));
 
@@ -49,7 +56,6 @@ const TicketForm = () => {
 
     const handleSubmit = async (event) => {
         event.preventDefault();
-        console.log(state);
         const res = await sendTicket(state);
         if (res.status === 201) {
             setSnackbarOpen({ open: true, message: "Ticket submited!", severity: "success" });
@@ -60,8 +66,12 @@ const TicketForm = () => {
 
     return (
         <>
-            <Container component="main">
-                <form onSubmit={handleSubmit} className={classes.form}>
+            <Paper square elevation={3} className={classes.container}>
+                <Typography variant="h4" align="center" className={classes.title} >
+                    Submit a new Ticket
+                </Typography>
+
+                <form onSubmit={handleSubmit}>
                     <Grid container spacing={2}>
                         <Grid item xs={12} sm={6}>
                             <TextField
@@ -104,7 +114,7 @@ const TicketForm = () => {
                                 required
                                 fullWidth
                                 multiline
-                                rows={3}
+                                rows={4}
                                 name="description"
                                 label="Description"
                                 id="description"
@@ -120,8 +130,8 @@ const TicketForm = () => {
                     >
                         Submit
                 </Button>
-                </form>
-            </Container>
+                </form >
+            </Paper >
             <Snackbar
                 open={snackbarOpen.open}
                 autoHideDuration={6000}
