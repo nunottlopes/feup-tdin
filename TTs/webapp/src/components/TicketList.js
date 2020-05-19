@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import {
-    TableContainer,
     Table,
     TableHead,
     TableRow,
@@ -33,12 +32,26 @@ const useStyles = makeStyles(() => ({
             borderBottom: 'unset'
         }
     },
-    id: {
-        maxWidth: "3em",
-        overflow: "hidden",
-        textOverflow: "ellipsis"
-    }
+
+    header: {
+        fontWeight: 'bold',
+        fontSize: 12
+    },
+
+    container: {
+        margin: "1em 1em",
+        padding: "1em"
+    },
+
 }));
+
+const main = [
+    { header: "ID", detail: (data) => data._id },
+    { header: "Worker", detail: (data) => data.name },
+    { header: "Title", detail: (data) => data.title },
+    { header: "Status", detail: (data) => data.status },
+    { header: "Created At", detail: (data) => data.createdAt }
+]
 
 const details = [
     { header: "ID", detail: (data) => data._id },
@@ -60,24 +73,20 @@ const Entry = (props) => {
 
     return (
         <>
-            <TableRow key={`_row${ticket.id}`} className={classes.root}>
+            <TableRow key={`_row${ticket.id}`} className={classes.row}>
                 <TableCell>
                     <IconButton aria-label="expand row" size="small" onClick={() => setOpen(!open)}>
                         {open ? <KeyboardArrowUp /> : <KeyboardArrowDown />}
                     </IconButton>
                 </TableCell>
-                <TableCell component="th" scope="row" className={classes.id}>
-                    {ticket._id}
-                </TableCell>
-                <TableCell>{ticket.name}</TableCell>
-                <TableCell>{ticket.title}</TableCell>
-                <TableCell>{ticket.status}</TableCell>
-                <TableCell>{ticket.createdAt}</TableCell>
+                {main.map(({ detail }) => (
+                    <TableCell align="center">{detail(ticket)}</TableCell>
+                ))}
             </TableRow>
             <TableRow key={`details${ticket.id}`}>
                 <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
                     <Collapse in={open} timeout="auto" unmountOnExit>
-                        <Box margin={1}>
+                        <Box margin={1} >
                             <Typography variant="h6" gutterBottom component="div">
                                 Details
                             </Typography>
@@ -128,16 +137,14 @@ const TicketList = () => {
 
     return (
         <>
-            <TableContainer component={Paper}>
+            <Paper square className={classes.container}>
                 <Table aria-label="collapsible table">
                     <TableHead>
                         <TableRow>
                             <TableCell />
-                            <TableCell>ID</TableCell>
-                            <TableCell>Worker</TableCell>
-                            <TableCell>Title</TableCell>
-                            <TableCell>Status</TableCell>
-                            <TableCell>Created At</TableCell>
+                            {main.map(({ header }) => (
+                                <TableCell align="center"><Typography className={classes.header}>{header}</Typography></TableCell>
+                            ))}
                         </TableRow>
                     </TableHead>
                     {!ticketsLoading && tickets &&
@@ -149,7 +156,7 @@ const TicketList = () => {
                     }
                 </Table>
                 {ticketsLoading && <LinearProgress />}
-            </TableContainer>
+            </Paper>
         </>
     );
 }
