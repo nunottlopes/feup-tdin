@@ -3,8 +3,9 @@ const {app, BrowserWindow, Menu, ipcMain} = require('electron')
 const path = require("path");
 const isDev = require("electron-is-dev");
 
-let mainWindow;
-let loginWindow;
+let mainWindow = null;
+let loginWindow = null;
+let secondaryWindow = null;
 
 // require("update-electron-app")({
 //   repo: "kitze/react-electron-example",
@@ -13,8 +14,8 @@ let loginWindow;
 
 function createMainWindow() {
   mainWindow = new BrowserWindow({
-    width: 1000,
-    height: 680,
+    width: 1100,
+    height: 750,
     webPreferences: {
       nodeIntegration: true
     }
@@ -44,6 +45,22 @@ function createLoginWindow() {
       : `file://${path.join(__dirname, "../build/index.html?login")}`
   );
   loginWindow.on("closed", () => (loginWindow = null));
+}
+
+function createSecondaryWindow() {
+  secondaryWindow = new BrowserWindow({
+    width: 600,
+    height: 270,
+    webPreferences: {
+      nodeIntegration: true
+    }
+  });
+  secondaryWindow.loadURL(
+    isDev
+      ? "http://localhost:3000?secondary"
+      : `file://${path.join(__dirname, "../build/index.html?secondary")}`
+  );
+  secondaryWindow.on("closed", () => (secondaryWindow = null));
 }
 
 const mainMenuTemplate =  [
@@ -83,16 +100,26 @@ if(process.env.NODE_ENV !== 'production'){
 
 // ACTIONS
 
-ipcMain.on('name:login', function(e, item){
+ipcMain.on('login', function(e, item){
 
-  if(mainWindow !== null) createMainWindow()
+  if(mainWindow === null) createMainWindow()
   else mainWindow.show()
 
   mainWindow.webContents.once('dom-ready', () => {
-    mainWindow.webContents.send('name:login', item);
+    mainWindow.webContents.send('login', item);
   });
 
   loginWindow.close();
+});
+
+ipcMain.on('secondary', function(e, item){
+
+  if(secondaryWindow === null) createSecondaryWindow()
+  else secondaryWindow.show()
+
+  secondaryWindow.webContents.once('dom-ready', () => {
+    secondaryWindow.webContents.send('secondary', item);
+  });
 });
 
 

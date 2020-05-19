@@ -111,32 +111,22 @@ const rows = [
   {_id: '3',name: 'Antonio', email: 'email@example.com', title: 'Tenho um problema com o meu mac', description: 'renforen rg rtg rrerng rgherg  ewgh wgr gewih giehrw kgerw gewr gkerw gew', status: 'unassigned', date: '2016-05-12 22:34'},
   {_id: '4',name: 'Antonio', email: 'email@example.com', title: 'Tenho um problema com o meu mac', description: 'renforen rg rtg rrerng rgherg  ewgh wgr gewih giehrw kgerw gewr gkerw gew', status: 'unassigned', date: '2016-05-12 22:34'},
   {_id: '5',name: 'Antonio', email: 'email@example.com', title: 'Tenho um problema com o meu mac', description: 'renforen rg rtg rrerng rgherg  ewgh wgr gewih giehrw kgerw gewr gkerw gew', status: 'unassigned', date: '2016-05-12 22:34'},
-  {_id: '5',name: 'Antonio', email: 'email@example.com', title: 'Tenho um problema com o meu mac', description: 'renforen rg rtg rrerng rgherg  ewgh wgr gewih giehrw kgerw gewr gkerw gew', status: 'unassigned', date: '2016-05-12 22:34'},
-  {_id: '5',name: 'Antonio', email: 'email@example.com', title: 'Tenho um problema com o meu mac', description: 'renforen rg rtg rrerng rgherg  ewgh wgr gewih giehrw kgerw gewr gkerw gew', status: 'unassigned', date: '2016-05-12 22:34'},
-  {_id: '5',name: 'Antonio', email: 'email@example.com', title: 'Tenho um problema com o meu mac', description: 'renforen rg rtg rrerng rgherg  ewgh wgr gewih giehrw kgerw gewr gkerw gew', status: 'unassigned', date: '2016-05-12 22:34'}
+  {_id: '6',name: 'Antonio', email: 'email@example.com', title: 'Tenho um problema com o meu mac', description: 'renforen rg rtg rrerng rgherg  ewgh wgr gewih giehrw kgerw gewr gkerw gew', status: 'unassigned', date: '2016-05-12 22:34'},
+  {_id: '7',name: 'Antonio', email: 'email@example.com', title: 'Tenho um problema com o meu mac', description: 'renforen rg rtg rrerng rgherg  ewgh wgr gewih giehrw kgerw gewr gkerw gew', status: 'unassigned', date: '2016-05-12 22:34'},
+  {_id: '8',name: 'Antonio', email: 'email@example.com', title: 'Tenho um problema com o meu mac', description: 'renforen rg rtg rrerng rgherg  ewgh wgr gewih giehrw kgerw gewr gkerw gew', status: 'unassigned', date: '2016-05-12 22:34'}
 ];
 
-const useTableStyles = makeStyles({
-  header: {
-    fontWeight:'bold'
-  }
-});
-
 function Unassigned() {
-
-  const classes = useTableStyles();
-
   return (
     <TableContainer component={Paper}>
       <Table aria-label="collapsible table">
         <TableHead>
           <TableRow>
             <TableCell />
-            <TableCell><Typography className={classes.header}>Title</Typography></TableCell>
-            <TableCell align="center"><Typography className={classes.header}>Author</Typography></TableCell>
-            <TableCell align="center"><Typography className={classes.header}>Date</Typography></TableCell>
-            <TableCell align="center"><Typography className={classes.header}>Status</Typography></TableCell>
-            <TableCell />
+            <TableCell><Typography style={{ fontWeight: 'bold' }}>Title</Typography></TableCell>
+            <TableCell align="center"><Typography style={{ fontWeight: 'bold' }}>Author</Typography></TableCell>
+            <TableCell align="center"><Typography style={{ fontWeight: 'bold' }}>Date</Typography></TableCell>
+            <TableCell align="center"><Typography style={{ fontWeight: 'bold' }}>Status</Typography></TableCell>
             <TableCell />
           </TableRow>
         </TableHead>

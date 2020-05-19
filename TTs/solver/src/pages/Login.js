@@ -38,7 +38,7 @@ function Login() {
   const [name, setName] = useState("")
 
   const handleSubmit = () => {
-    ipcRenderer.send('name:login', name);
+    ipcRenderer.send('login', name);
   }
 
   return (

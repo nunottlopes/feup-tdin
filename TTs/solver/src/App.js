@@ -1,15 +1,15 @@
 import React from 'react';
 import Main from './pages/Main';
 import Login from './pages/Login';
-
-// const {app} = window.require('electron').remote;
+import Secondary from './pages/Secondary';
 
 function App() {
 
   const Views = () => {
     return {
       main: <Main />,
-      login: <Login />
+      login: <Login />,
+      secondary: <Secondary />
     }
   }
   let name = window.location.search.substr(1);

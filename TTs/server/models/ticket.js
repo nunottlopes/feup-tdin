@@ -9,7 +9,7 @@ let TicketSchema = new mongoose.Schema({
     response: { type: String, required: false },
     status: {
         type: String,
-        enum: ["unassigned", "assigned", "waiting", "solved"],
+        enum: ["unassigned", "assigned", "waiting", "solved", "answered"],
         default: "unassigned"
     }
 }, {

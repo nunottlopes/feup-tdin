@@ -1,18 +1,14 @@
 import React, { useState } from "react";
 import { makeStyles } from '@material-ui/core/styles';
-import Drawer from '@material-ui/core/Drawer';
 import AppBar from '@material-ui/core/AppBar';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Toolbar from '@material-ui/core/Toolbar';
-import List from '@material-ui/core/List';
 import Typography from '@material-ui/core/Typography';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
-import ListItemText from '@material-ui/core/ListItemText';
-import InboxIcon from '@material-ui/icons/MoveToInbox';
+import Tabs from '@material-ui/core/Tabs';
+import Tab from '@material-ui/core/Tab';
+
 import Assigned from "../components/Assigned";
 import Unassigned from "../components/Unassigned";
-import Secondary from "../components/Secondary";
 
 const drawerWidth = 240;
 
@@ -47,7 +43,7 @@ function Main() {
   const [index, setIndex] = useState(0)
   const [name, setName] = useState("")
 
-  ipcRenderer.on('name:login', function(e, item){
+  ipcRenderer.on('login', function(e, item){
     setName(item)
   });
 
@@ -60,37 +56,16 @@ function Main() {
             Hi {name}!
           </Typography>
         </Toolbar>
+        <Tabs value={index} onChange={(event, value) => setIndex(value)} aria-label="simple tabs example">
+          <Tab label="Unassigned tickets" {... {id: `simple-tab-0`, 'aria-controls': `simple-tabpanel-0`}} />
+          <Tab label="My tickets" {... {id: `simple-tab-1`, 'aria-controls': `simple-tabpanel-1`}} />
+        </Tabs>
       </AppBar>
-      <Drawer
-        className={classes.drawer}
-        variant="permanent"
-        classes={{
-          paper: classes.drawerPaper,
-        }}
-      >
-        <Toolbar />
-        <div className={classes.drawerContainer}>
-          <List>
-            <ListItem selected={index === 0} button key="Unassigned tickets" onClick={() => setIndex(0)}>
-              <ListItemIcon><InboxIcon /></ListItemIcon>
-              <ListItemText primary="Unassigned tickets" />
-            </ListItem>
-            <ListItem selected={index === 1} button key="My tickets" onClick={() =>  setIndex(1)}>
-              <ListItemIcon><InboxIcon /></ListItemIcon>
-              <ListItemText primary="My tickets" />
-            </ListItem>
-            <ListItem selected={index === 2}button key="Secondary tickets" onClick={() =>  setIndex(2)}>
-              <ListItemIcon><InboxIcon /></ListItemIcon>
-              <ListItemText primary="Secondary tickets" />
-            </ListItem>
-          </List>
-        </div>
-      </Drawer>
       <main className={classes.content}>
         <Toolbar />
+        <Tabs />
         {index === 0 && <Unassigned/>}
         {index === 1 && <Assigned/>}
-        {index === 2 && <Secondary/>}
       </main>
     </div>
   );
