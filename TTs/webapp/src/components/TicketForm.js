@@ -5,7 +5,8 @@ import {
     TextField,
     Button,
     Snackbar,
-    Paper
+    Paper,
+    Typography
 } from "@material-ui/core";
 import {
     Alert
@@ -21,6 +22,11 @@ const useStyles = makeStyles(() => ({
 
     submit: {
         marginTop: "1em",
+    },
+
+    title: {
+        marginBottom: "1em",
+        color: "#757575"
     }
 }));
 
@@ -50,7 +56,6 @@ const TicketForm = () => {
 
     const handleSubmit = async (event) => {
         event.preventDefault();
-        console.log(state);
         const res = await sendTicket(state);
         if (res.status === 201) {
             setSnackbarOpen({ open: true, message: "Ticket submited!", severity: "success" });
@@ -62,6 +67,10 @@ const TicketForm = () => {
     return (
         <>
             <Paper square elevation={3} className={classes.container}>
+                <Typography variant="h4" align="center" className={classes.title} >
+                    Submit a new Ticket
+                </Typography>
+
                 <form onSubmit={handleSubmit}>
                     <Grid container spacing={2}>
                         <Grid item xs={12} sm={6}>
@@ -105,7 +114,7 @@ const TicketForm = () => {
                                 required
                                 fullWidth
                                 multiline
-                                rows={3}
+                                rows={4}
                                 name="description"
                                 label="Description"
                                 id="description"
@@ -121,8 +130,8 @@ const TicketForm = () => {
                     >
                         Submit
                 </Button>
-                </form>
-            </Paper>
+                </form >
+            </Paper >
             <Snackbar
                 open={snackbarOpen.open}
                 autoHideDuration={6000}

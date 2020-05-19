@@ -15,12 +15,15 @@ import {
     ListItem,
     ListItemText,
     LinearProgress,
-    Divider
+    Divider,
+    InputAdornment,
+    TextField
 } from "@material-ui/core";
 
 import {
     KeyboardArrowUp,
-    KeyboardArrowDown
+    KeyboardArrowDown,
+    Search,
 } from "@material-ui/icons";
 
 import { getTickets } from "../ApiServices.js";
@@ -43,6 +46,10 @@ const useStyles = makeStyles(() => ({
         padding: "1em"
     },
 
+    search: {
+        marginBottom: "2em"
+    }
+
 }));
 
 const main = [
@@ -50,7 +57,7 @@ const main = [
     { header: "Worker", detail: (data) => data.name },
     { header: "Title", detail: (data) => data.title },
     { header: "Status", detail: (data) => data.status },
-    { header: "Created At", detail: (data) => data.createdAt }
+    { header: "Created At", detail: (data) => new Date(data.createdAt).toLocaleDateString() }
 ]
 
 const details = [
@@ -61,7 +68,7 @@ const details = [
     { header: "Description", detail: (data) => data.description },
     { header: "Solver", detail: (data) => data.solver || "-" },
     { header: "Response", detail: (data) => data.response || "-" },
-    { header: "Created At", detail: (data) => data.createdAt },
+    { header: "Created At", detail: (data) => new Date(data.createdAt).toLocaleDateString() },
 ];
 
 
@@ -122,6 +129,7 @@ const TicketList = () => {
     const classes = useStyles();
 
     const [tickets, setTickets] = useState([]);
+    const [filteredTickets, setFilteredTickets] = useState([]);
     const [ticketsLoading, setTicketsLoading] = useState(false);
 
 
@@ -130,26 +138,53 @@ const TicketList = () => {
         const fetchData = async () => {
             const tickets = await getTickets();
             setTickets(tickets.data);
+            setFilteredTickets(tickets.data);
             setTicketsLoading(false);
         }
         fetchData();
     }, []);
 
+    const handleSearch = (event) => {
+        setTicketsLoading(true);
+        if (event.target.value === "")
+            setFilteredTickets(tickets);
+        else
+            setFilteredTickets(tickets.filter(t => t.name.toLowerCase().includes(event.target.value.toLowerCase())));
+        setTicketsLoading(false);
+    }
+
     return (
         <>
             <Paper square className={classes.container}>
+                <TextField
+                    label="Search by worker"
+                    fullWidth
+                    InputProps={{
+                        endAdornment: (
+                            <InputAdornment>
+                                <IconButton>
+                                    <Search />
+                                </IconButton>
+                            </InputAdornment>
+                        )
+                    }}
+                    className={classes.search}
+                    onChange={handleSearch}
+                />
                 <Table aria-label="collapsible table">
                     <TableHead>
                         <TableRow>
                             <TableCell />
-                            {main.map(({ header }) => (
-                                <TableCell align="center"><Typography className={classes.header}>{header}</Typography></TableCell>
+                            {main.map(({ header, filter }) => (
+                                <TableCell align="center">
+                                    <Typography className={classes.header}>{header}</Typography>
+                                </TableCell>
                             ))}
                         </TableRow>
                     </TableHead>
-                    {!ticketsLoading && tickets &&
+                    {!ticketsLoading && filteredTickets &&
                         <TableBody>
-                            {tickets.map((ticket) => (
+                            {filteredTickets.map((ticket) => (
                                 <Entry key={ticket.id} ticket={ticket} />
                             ))}
                         </TableBody>
