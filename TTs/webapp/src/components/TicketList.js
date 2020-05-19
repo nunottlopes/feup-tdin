@@ -31,23 +31,19 @@ import { getTickets } from "../ApiServices.js";
 
 const useStyles = makeStyles(() => ({
     row: {
-        '& > *': {
-            borderBottom: 'unset'
+        "& > *": {
+            borderBottom: "unset"
         }
     },
 
     header: {
-        fontWeight: 'bold',
+        fontWeight: "bold",
         fontSize: 12
     },
 
     container: {
-        margin: "1em 1em",
+        margin: "2em",
         padding: "1em"
-    },
-
-    search: {
-        marginBottom: "2em"
     }
 
 }));
@@ -137,6 +133,7 @@ const TicketList = () => {
         setTicketsLoading(true);
         const fetchData = async () => {
             const tickets = await getTickets();
+            tickets.data.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
             setTickets(tickets.data);
             setFilteredTickets(tickets.data);
             setTicketsLoading(false);
@@ -168,9 +165,10 @@ const TicketList = () => {
                             </InputAdornment>
                         )
                     }}
-                    className={classes.search}
                     onChange={handleSearch}
                 />
+            </Paper>
+            <Paper square className={classes.container}>
                 <Table aria-label="collapsible table">
                     <TableHead>
                         <TableRow>

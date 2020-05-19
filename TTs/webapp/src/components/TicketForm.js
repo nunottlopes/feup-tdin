@@ -16,7 +16,7 @@ import { sendTicket } from "../ApiServices.js";
 
 const useStyles = makeStyles(() => ({
     container: {
-        margin: "1em 1em",
+        margin: "2em",
         padding: "1em"
     },
 
@@ -26,7 +26,7 @@ const useStyles = makeStyles(() => ({
 
     title: {
         marginBottom: "1em",
-        color: "#757575"
+        color: "#3f51b5"
     }
 }));
 
