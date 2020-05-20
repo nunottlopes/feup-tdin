@@ -19,6 +19,15 @@ services:
     depends_on:
       - mongo
 
+  rabbitmq:
+    image: rabbitmq:3-management-alpine
+    hostname: rabbitmq
+    ports:
+      # The standard AMQP protocol port
+      - "5672:5672"
+      # HTTP management UI
+      - "15672:15672"
+
   server:
     build: ./server
     restart: always
@@ -29,6 +38,9 @@ services:
       - 3001:3001
     depends_on:
       - mongo
+      - rabbitmq
+    environment:
+      WAIT_HOSTS: rabbitmq:5672, mongo:27017
 
   webapp:
     build: ./webapp
