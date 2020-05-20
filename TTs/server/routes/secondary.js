@@ -45,7 +45,7 @@ router.post("/", (req, res) => {
 });
 
 router.put("/:id", (req, res) => {
-    Ticket.findByIdAndUpdate(req.params.id, req.body, (err, result) => {
+    Secondary.findByIdAndUpdate(req.params.id, req.body, (err, result) => {
         if (err) {
             res.status(500).send(err);
         } else {

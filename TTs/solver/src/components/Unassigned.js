@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Box from '@material-ui/core/Box';
 import Collapse from '@material-ui/core/Collapse';
@@ -16,6 +16,7 @@ import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 import Tooltip from '@material-ui/core/Tooltip';
+import { ApiServices } from "../ApiServices";
 
 const useRowStyles = makeStyles({
   root: {
@@ -67,7 +68,7 @@ function Row(props) {
           {row.title}
         </TableCell>
         <TableCell align="center">{row.name}</TableCell>
-        <TableCell align="center">{row.date}</TableCell>
+        <TableCell align="center">{new Date(row.createdAt).toLocaleDateString()}</TableCell>
         <TableCell align="center">{row.status}</TableCell>
         <TableCell align="center">
           <Tooltip title="Assign ticket" aria-label="add">
@@ -105,18 +106,16 @@ function Row(props) {
   );
 }
 
-const rows = [
-  {_id: '1',name: 'Antonio', email: 'email@example.com', title: 'Tenho um problema com o meu mac ffer frferf erg er gerw gw g rtg rtg tw gtwgwrtgrtgrt trg problem', description: 'renforen rg rtg rrerng rgherg  ewgh wgr gewih giehrw kgerw gewr gkerw gew', status: 'unassigned', date: '2016-05-12 22:34'},
-  {_id: '2',name: 'Antonio', email: 'email@example.com', title: 'Tenho um problema com o meu mac', description: 'renforen rg rtg rrerng rgherg  ewgh wgrrenforen rg rtg rrerng rgherg  ewgh wgrrenforen rg rtg rrerng rgherg  ewgh wgrrenforen rg rtg rrerng rgherg  ewgh wgrrenforen rg rtg rrerng rgherg  ewgh wgrrenforen rg rtg rrerng rgherg  ewgh wgrrenforen rg rtg rrerng rgherg  ewgh wgrrenforen rg rtg rrerng rgherg  ewgh wgrrenforen rg rtg rrerng rgherg  ewgh wgrrenforen rg rtg rrerng rgherg  ewgh wgrrenforen rg rtg rrerng rgherg  ewgh wgrrenforen rg rtg rrerng rgherg  ewgh wgrrenforen rg rtg rrerng rgherg  ewgh wgrrenforen rg rtg rrerng rgherg  ewgh wgrrenforen rg rtg rrerng rgherg  ewgh wgrrenforen rg rtg rrerng rgherg  ewgh wgrrenforen rg rtg rrerng rgherg  ewgh wgrrenforen rg rtg rrerng rgherg  ewgh wgr gewih giehrw kgerw gewr gkerw gew', status: 'unassigned', date: '2016-05-12 22:34'},
-  {_id: '3',name: 'Antonio', email: 'email@example.com', title: 'Tenho um problema com o meu mac', description: 'renforen rg rtg rrerng rgherg  ewgh wgr gewih giehrw kgerw gewr gkerw gew', status: 'unassigned', date: '2016-05-12 22:34'},
-  {_id: '4',name: 'Antonio', email: 'email@example.com', title: 'Tenho um problema com o meu mac', description: 'renforen rg rtg rrerng rgherg  ewgh wgr gewih giehrw kgerw gewr gkerw gew', status: 'unassigned', date: '2016-05-12 22:34'},
-  {_id: '5',name: 'Antonio', email: 'email@example.com', title: 'Tenho um problema com o meu mac', description: 'renforen rg rtg rrerng rgherg  ewgh wgr gewih giehrw kgerw gewr gkerw gew', status: 'unassigned', date: '2016-05-12 22:34'},
-  {_id: '6',name: 'Antonio', email: 'email@example.com', title: 'Tenho um problema com o meu mac', description: 'renforen rg rtg rrerng rgherg  ewgh wgr gewih giehrw kgerw gewr gkerw gew', status: 'unassigned', date: '2016-05-12 22:34'},
-  {_id: '7',name: 'Antonio', email: 'email@example.com', title: 'Tenho um problema com o meu mac', description: 'renforen rg rtg rrerng rgherg  ewgh wgr gewih giehrw kgerw gewr gkerw gew', status: 'unassigned', date: '2016-05-12 22:34'},
-  {_id: '8',name: 'Antonio', email: 'email@example.com', title: 'Tenho um problema com o meu mac', description: 'renforen rg rtg rrerng rgherg  ewgh wgr gewih giehrw kgerw gewr gkerw gew', status: 'unassigned', date: '2016-05-12 22:34'}
-];
-
 function Unassigned() {
+
+  const [rows, setRows] = useState(null)
+
+  useEffect(() => {
+    ApiServices.getUnassignedTickets().then(response => {
+      setRows(response.data)
+    })
+  }, [])
+
   return (
     <TableContainer component={Paper}>
       <Table aria-label="collapsible table">
@@ -131,7 +130,7 @@ function Unassigned() {
           </TableRow>
         </TableHead>
         <TableBody>
-          {rows.map((row) => (
+          {rows !== null && rows.map((row) => (
             <Row key={row._id} row={row} />
           ))}
         </TableBody>

@@ -65,7 +65,7 @@ function Main() {
         <Toolbar />
         <Tabs />
         {index === 0 && <Unassigned/>}
-        {index === 1 && <Assigned/>}
+        {index === 1 && <Assigned name={name}/>}
       </main>
     </div>
   );
