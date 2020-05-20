@@ -81,13 +81,17 @@ const Question = (props) => {
   const classes = useQuestionStyles();
 
   const [questions, setQuestions] = useState(null)
+  const [update, setUpdate] = useState(false)
+
+  ipcRenderer.on('secondary:sent', function(){
+    setUpdate(!update)
+  });
 
   useEffect(() => {
     ApiServices.getSecondayTickets(props.ticket._id, props.ticket.solver).then(response => {
       setQuestions(response.data)
-      console.log(response.data)
     })
-  }, [])
+  }, [props.ticket._id, props.ticket.solver, update])
 
   return(
     <>
@@ -101,7 +105,7 @@ const Question = (props) => {
               Question to department {question.department}
             </Typography>
             <Typography variant="h6" component="h4">
-              {question.title}
+              {question.question}
             </Typography>
             <Typography className={classes.response} variant="body2" component="p">
               {question.response}
@@ -162,6 +166,13 @@ const TicketInfo = (props) => {
     ipcRenderer.send('secondary', ticket);
   }
 
+  const solveTicket = () => {
+    ApiServices.solveTicket(response, ticket._id).then(response => {
+      alert("Ticket solved!")
+      props.setId('')
+    })
+  }
+
   return(
     <>
       <IconButton size="small" onClick={() => props.setId('')}>
@@ -207,7 +218,7 @@ const TicketInfo = (props) => {
           />
           <div className={classes.submit}>
             <Box m={2} >
-              <Button variant="outlined" color="primary" onClick={() => console.log('Solve')}>
+              <Button variant="outlined" color="primary" onClick={solveTicket}>
                 Solve ticket
               </Button>
             </Box>
@@ -226,14 +237,14 @@ function Assigned(props) {
   const [id, setId] = useState('')
   const [rows, setRows] = useState(null)
 
-  const solver = "A"
-  // solver = props.name
-
   useEffect(() => {
-    ApiServices.getMyTickets(solver).then(response => {
+    ApiServices.getMyTickets(props.name).then(response => {
+      response[0].data.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt))
+      response[1].data.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt))
+      response[2].data.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt))
       setRows([...response[0].data, ...response[1].data, ...response[2].data ])
     })
-  }, [])
+  }, [props.name, id])
 
   return (
     <>

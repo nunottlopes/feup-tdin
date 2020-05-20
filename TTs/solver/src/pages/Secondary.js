@@ -4,6 +4,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 import Box from '@material-ui/core/Box';
+import { ApiServices } from "../ApiServices";
 
 const {ipcRenderer} = window.require('electron');
 
@@ -35,18 +36,37 @@ function Secondary() {
 
   const [ticket, setTicket] = useState({})
   const [question, setQuestion] = useState("")
+  const [name, setName] = useState("")
 
   ipcRenderer.on('secondary', function(e, item){
     setTicket({
       _id: item._id,
-      title: item.title
-      }
-    )
+      title: item.title,
+      solver: item.solver
+    })
   });
+
+  const sendSecondaryQuestion = () => {
+    ApiServices.createSecondaryTicket(ticket, name, question).then(response => {
+      ipcRenderer.send('secondary:sent');
+    })
+  }
 
   return (
     <div className={classes.container}>
       <h4>Ask Department</h4>
+      <TextField
+        variant="outlined"
+        fullWidth
+        id="name"
+        label="Department name"
+        name="name"
+        autoComplete="name"
+        value={name}
+        onChange={(event) => setName(event.target.value)}
+        autoFocus
+        margin="normal"
+      />
       <TextField
         variant="outlined"
         fullWidth
@@ -56,18 +76,13 @@ function Secondary() {
         autoComplete="question"
         value={question}
         onChange={(event) => setQuestion(event.target.value)}
-        autoFocus
         multiline
         rows={2}
         rowsMax={4}
-        InputProps={{
-          classes: {
-            input: classes.resize,
-          },
-        }}
+        margin="normal"
       />
       <Box m={2} >
-        <Button variant="outlined" color="primary" onClick={() => console.log("Send")}>
+        <Button variant="outlined" color="primary" onClick={sendSecondaryQuestion}>
           Send
         </Button>
       </Box>

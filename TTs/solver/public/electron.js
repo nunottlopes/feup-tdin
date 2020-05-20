@@ -50,7 +50,7 @@ function createLoginWindow() {
 function createSecondaryWindow() {
   secondaryWindow = new BrowserWindow({
     width: 600,
-    height: 270,
+    height: 390,
     webPreferences: {
       nodeIntegration: true
     }
@@ -121,6 +121,16 @@ ipcMain.on('secondary', function(e, item){
     secondaryWindow.webContents.send('secondary', item);
   });
 });
+
+ipcMain.on('secondary:sent', function(){
+
+  if(mainWindow !== null){
+    mainWindow.webContents.send('secondary:sent');
+  }
+
+  if(secondaryWindow !== null) secondaryWindow.close()
+});
+
 
 
 app.whenReady().then(() => {

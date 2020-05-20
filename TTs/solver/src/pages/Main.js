@@ -41,7 +41,9 @@ function Main() {
   const classes = useStyles();
 
   const [index, setIndex] = useState(0)
-  const [name, setName] = useState("")
+  // const [name, setName] = useState("")
+  // TODO:
+  const [name, setName] = useState("A")
 
   ipcRenderer.on('login', function(e, item){
     setName(item)
@@ -64,7 +66,7 @@ function Main() {
       <main className={classes.content}>
         <Toolbar />
         <Tabs />
-        {index === 0 && <Unassigned/>}
+        {index === 0 && <Unassigned name={name}/>}
         {index === 1 && <Assigned name={name}/>}
       </main>
     </div>

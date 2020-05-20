@@ -22,25 +22,40 @@ const getSecondayTickets = async (ticket_id, solver) => {
   return await axios.get(`${API_URL}/secondary?original=${ticket_id}&solver=${solver}`);
 }
 
-// const getPatternData = async (paper_id, pattern_id) => {
-//   return await axios.get(`${AccessPoint.getDatabaseEndPoint()}/paper/${paper_id}/pattern/${pattern_id}`);
-// };
+const assignTicket = async (solver, ticket_id) => {
+  const body = {
+    solver: solver,
+    status: 'assigned'
+  }
 
-// const updatePaper = async(paper_id, values) => {
-//   const data = {
-//     title: values.title,
-//     conference: values.conference,
-//     date: values.date,
-//     authors: values.authors,
-//     keywords: values.keywords
-//   }
+  return await axios.put(`${API_URL}/ticket/${ticket_id}`, body)
+}
 
-//   return await axios.put(`${AccessPoint.getDatabaseEndPoint()}/paper/${paper_id}`, data);
-// };
+const solveTicket = async (response, ticket_id) => {
+  const body = {
+    response: response,
+    status: 'solved'
+  }
 
+  return await axios.put(`${API_URL}/ticket/${ticket_id}`, body)
+}
+
+const createSecondaryTicket = async (ticket, department, question) => {
+  const body = {
+    original: ticket._id,
+    question: question,
+    solver: ticket.solver,
+    department: department
+  }
+
+  return await axios.post(`${API_URL}/secondary`, body)
+}
 
 export const ApiServices = {
+  createSecondaryTicket,
+  solveTicket,
   getUnassignedTickets,
   getMyTickets,
-  getSecondayTickets
+  getSecondayTickets,
+  assignTicket
 };

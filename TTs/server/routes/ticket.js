@@ -52,6 +52,8 @@ router.put("/:id", (req, res) => {
             res.status(200).send(result);
         }
     });
+
+    // TODO: Criar um endpoint para dar solve (enviar email) e para dar assign
 });
 
 router.get("/:id/secondary", (req, res) => {

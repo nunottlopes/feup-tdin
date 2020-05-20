@@ -39,7 +39,6 @@ const App = () => {
       </Paper>
       {value === 0 && (<TicketForm />)}
       {value === 1 && (<TicketList />)}
-
     </div>
   );
 }

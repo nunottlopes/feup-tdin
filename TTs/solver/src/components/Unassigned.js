@@ -47,10 +47,6 @@ const useRowStyles = makeStyles({
   }
 });
 
-const handleAssign = (id) => {
-  alert("Assign ticket with id " + id)
-}
-
 function Row(props) {
   const { row } = props;
   const [open, setOpen] = React.useState(false);
@@ -72,7 +68,7 @@ function Row(props) {
         <TableCell align="center">{row.status}</TableCell>
         <TableCell align="center">
           <Tooltip title="Assign ticket" aria-label="add">
-            <IconButton onClick={() => handleAssign(row._id)}>
+            <IconButton onClick={() => props.assignTicket(row._id)}>
               <CheckCircleIcon color="primary" />
             </IconButton>
           </Tooltip>
@@ -106,15 +102,23 @@ function Row(props) {
   );
 }
 
-function Unassigned() {
+function Unassigned(props) {
 
   const [rows, setRows] = useState(null)
+  const [update, setUpdate] = useState(false)
+
+  const assignTicket = (ticket_id) => {
+    ApiServices.assignTicket(props.name, ticket_id).then(response => {
+      setUpdate(!update)
+    })
+  }
 
   useEffect(() => {
     ApiServices.getUnassignedTickets().then(response => {
+      response.data.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt))
       setRows(response.data)
     })
-  }, [])
+  }, [update])
 
   return (
     <TableContainer component={Paper}>
@@ -131,7 +135,7 @@ function Unassigned() {
         </TableHead>
         <TableBody>
           {rows !== null && rows.map((row) => (
-            <Row key={row._id} row={row} />
+            <Row key={row._id} row={row} assignTicket={assignTicket}/>
           ))}
         </TableBody>
       </Table>

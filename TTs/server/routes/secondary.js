@@ -29,8 +29,7 @@ router.post("/", async (req, res) => {
 
     var t = new Secondary({
         original: req.body.original,
-        title: req.body.title,
-        description: req.body.description,
+        question: req.body.question,
         solver: req.body.solver,
         department: req.body.department
     });
@@ -38,6 +37,7 @@ router.post("/", async (req, res) => {
     // Saving it to the database.
     t.save((err, result) => {
         if (err) {
+            console.log(err)
             res.status(500).send(err);
         } else {
             res.status(201).send({
