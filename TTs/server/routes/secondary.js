@@ -1,5 +1,6 @@
 var express = require("express");
 var router = express.Router();
+const AmqpManager = require("../amqp/AmqpManager");
 const Secondary = require("../models/secondary")
 
 router.get("/:id", (req, res) => {
@@ -22,7 +23,10 @@ router.get("/", (req, res) => {
     });
 });
 
-router.post("/", (req, res) => {
+router.post("/", async (req, res) => {
+    const broker = await AmqpManager.getInstance();
+    await broker.send(req.body.department, Buffer.from(JSON.stringify(req.body)));
+
     var t = new Secondary({
         original: req.body.original,
         title: req.body.title,
