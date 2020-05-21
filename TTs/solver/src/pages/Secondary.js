@@ -47,6 +47,7 @@ function Secondary() {
   });
 
   const sendSecondaryQuestion = () => {
+    if(question.trim() === "" || name.trim() === "") return;
     ApiServices.createSecondaryTicket(ticket, name, question).then(response => {
       ipcRenderer.send('secondary:sent');
     })

@@ -37,9 +37,7 @@ const useStyles = makeStyles((theme) => ({
 function Main() {
   const classes = useStyles();
 
-  // const [name, setName] = useState("")
-  // TODO:
-  const [name, setName] = useState("casa")
+  const [name, setName] = useState("")
 
   ipcRenderer.on('login', function(e, item){
     setName(item)

@@ -59,6 +59,12 @@ const TicketForm = () => {
         const res = await sendTicket(state);
         if (res.status === 201) {
             setSnackbarOpen({ open: true, message: "Ticket submited!", severity: "success" });
+            setState({
+                name: "",
+                email: "",
+                title: "",
+                description: ""
+            })
         } else {
             setSnackbarOpen({ open: true, message: "Ticket submission failed!", severity: "error" })
         }
@@ -82,6 +88,7 @@ const TicketForm = () => {
                                 id="name"
                                 label="Name"
                                 autoFocus
+                                value={state.name}
                                 onChange={handleChange}
                             />
                         </Grid>
@@ -94,6 +101,7 @@ const TicketForm = () => {
                                 label="Email"
                                 name="email"
                                 type="email"
+                                value={state.email}
                                 onChange={handleChange}
                             />
                         </Grid>
@@ -105,6 +113,7 @@ const TicketForm = () => {
                                 id="title"
                                 label="Title"
                                 name="title"
+                                value={state.title}
                                 onChange={handleChange}
                             />
                         </Grid>
@@ -118,6 +127,7 @@ const TicketForm = () => {
                                 name="description"
                                 label="Description"
                                 id="description"
+                                value={state.description}
                                 onChange={handleChange}
                             />
                         </Grid>
@@ -137,7 +147,7 @@ const TicketForm = () => {
                 autoHideDuration={6000}
                 onClose={snackbarClose}
             >
-                <Alert onClose={snackbarClose} severity={snackbarClose.severity}>
+                <Alert onClose={snackbarClose} severity={snackbarOpen.severity}>
                     {snackbarOpen.message}
                 </Alert>
             </Snackbar>

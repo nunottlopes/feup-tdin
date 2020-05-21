@@ -22,7 +22,7 @@ function createMainWindow() {
   });
   mainWindow.loadURL(
     isDev
-      ? "http://localhost:3000?main"
+      ? "http://localhost:3003?main"
       : `file://${path.join(__dirname, "../build/index.html?main")}`
   );
   mainWindow.on("closed", () => {
@@ -41,7 +41,7 @@ function createLoginWindow() {
   });
   loginWindow.loadURL(
     isDev
-      ? "http://localhost:3000?login"
+      ? "http://localhost:3003?login"
       : `file://${path.join(__dirname, "../build/index.html?login")}`
   );
   loginWindow.on("closed", () => (loginWindow = null));
@@ -57,7 +57,7 @@ function createSecondaryWindow() {
   });
   secondaryWindow.loadURL(
     isDev
-      ? "http://localhost:3000?secondary"
+      ? "http://localhost:3003?secondary"
       : `file://${path.join(__dirname, "../build/index.html?secondary")}`
   );
   secondaryWindow.on("closed", () => (secondaryWindow = null));

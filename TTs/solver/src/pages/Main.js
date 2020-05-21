@@ -41,9 +41,7 @@ function Main() {
   const classes = useStyles();
 
   const [index, setIndex] = useState(0)
-  // const [name, setName] = useState("")
-  // TODO:
-  const [name, setName] = useState("A")
+  const [name, setName] = useState("")
 
   ipcRenderer.on('login', function(e, item){
     setName(item)

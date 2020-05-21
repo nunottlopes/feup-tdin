@@ -18,6 +18,8 @@ import CardContent from '@material-ui/core/CardContent';
 import Divider from '@material-ui/core/Divider';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
+import Snackbar from '@material-ui/core/Snackbar';
+import { Alert } from "@material-ui/lab"
 import { ApiServices } from "../ApiServices";
 
 const {ipcRenderer} = window.require('electron');
@@ -167,9 +169,13 @@ const TicketInfo = (props) => {
   }
 
   const solveTicket = () => {
+    if(response.trim() === "") return;
     ApiServices.solveTicket(response, ticket._id).then(response => {
-      alert("Ticket solved!")
       props.setId('')
+      props.setSnackbarOpen({
+        open: true,
+        message: "Ticket solved!"
+      })
     })
   }
 
@@ -236,6 +242,10 @@ function Assigned(props) {
 
   const [id, setId] = useState('')
   const [rows, setRows] = useState([])
+  const [snackbarOpen, setSnackbarOpen] = useState({
+    open: false,
+    message: ""
+  });
 
   useEffect(() => {
     ApiServices.getMyTickets(props.name).then(response => {
@@ -249,6 +259,7 @@ function Assigned(props) {
   return (
     <>
       {id === '' &&
+      <>
         <TableContainer component={Paper}>
           <Table aria-label="collapsible table">
             <TableHead>
@@ -267,8 +278,18 @@ function Assigned(props) {
             </TableBody>
           </Table>
         </TableContainer>
+        <Snackbar
+          open={snackbarOpen.open}
+          autoHideDuration={6000}
+          onClose={() => setSnackbarOpen({ open: false })}
+        >
+          <Alert onClose={() => setSnackbarOpen({ open: false })}>
+              {snackbarOpen.message}
+          </Alert>
+        </Snackbar>
+        </>
       }
-      {id !== '' && <TicketInfo ticket={rows.find(x => x._id === id)} setId={setId}/>}
+      {id !== '' && <TicketInfo ticket={rows.find(x => x._id === id)} setId={setId} setSnackbarOpen={setSnackbarOpen}/>}
     </>
   );
 }

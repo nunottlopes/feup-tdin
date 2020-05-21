@@ -90,11 +90,11 @@ const QuestionInfo = (props) => {
   const [answer, setAnswer] = useState('');
 
   const answerQuestion = () => {
+    if(answer.trim() === "") return
     ApiServices.solveSecondayQuestion(question._id, answer).then(response => {
       window.localStorage.removeItem(`${props.name}|${question._id}`)
       props.setId('')
     })
-    console.log("Answer question")
   }
 
   return(

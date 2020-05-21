@@ -85,14 +85,13 @@ const sendEmail = (ticket) => {
         from: "tdin-tts@gmail.com",
         to: ticket.email,
         subject: "The ticket you submitted has been solved!",
-        html: `<h1>The ticket you submitted has been solved!</h1> \
-        <br></br> \
-        <h2>Your ticket:</h2> \
+        html: `<h2>Your ticket:</h2> \
         <h4>Title:</h4>${ticket.title} \
         <h4>Description:</h4>${ticket.description} \
         <h4>Submitted at:</h4>${ticket.createdAt} \
-        <h2>Was solved by ${ticket.solver}</h2> \
-        <h4>Response:</h4>${ticket.response}`
+        <hr></hr> \
+        <h3>Response:</h3>${ticket.response} \
+        <h4>Was solved by ${ticket.solver}</h4>`
     };
 
     transporter.sendMail(mailOptions, (error, info) => {

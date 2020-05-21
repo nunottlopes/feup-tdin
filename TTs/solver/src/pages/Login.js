@@ -37,8 +37,9 @@ function Login() {
 
   const [name, setName] = useState("")
 
-  const handleSubmit = () => {
-    ipcRenderer.send('login', name);
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    if(name.trim() !== "") ipcRenderer.send('login', name);
   }
 
   return (
@@ -49,7 +50,7 @@ function Login() {
           <LockOutlinedIcon />
         </Avatar>
         <Typography component="h1" variant="h5">
-          Log in
+          Solver Log in
         </Typography>
         <form className={classes.form} onSubmit={handleSubmit}  noValidate>
           <TextField

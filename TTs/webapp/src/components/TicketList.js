@@ -64,7 +64,7 @@ const details = [
     { header: "Description", detail: (data) => data.description },
     { header: "Solver", detail: (data) => data.solver || "-" },
     { header: "Response", detail: (data) => data.response || "-" },
-    { header: "Created At", detail: (data) => new Date(data.createdAt).toLocaleDateString() },
+    { header: "Created At", detail: (data) => new Date(data.createdAt).toUTCString() },
 ];
 
 
