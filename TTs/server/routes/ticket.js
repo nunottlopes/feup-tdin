@@ -52,9 +52,15 @@ router.put("/:id", (req, res) => {
             res.status(200).send(result);
         }
     });
-
-    // TODO: Criar um endpoint para dar solve (enviar email) e para dar assign
 });
+
+
+// TODO:
+// /:id/solve
+// pode ser igual ao findByIdAndUpdate e tem de se enviar o email
+
+// /:id/assign
+// tem de se fazer a verificação se o status está unassinged antes de deixar dar assign, penso que np mongoose dá mandar um where
 
 router.get("/:id/secondary", (req, res) => {
     Secondary.find({ original: req.params.id }, (err, result) => {

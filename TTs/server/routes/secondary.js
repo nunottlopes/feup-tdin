@@ -48,6 +48,9 @@ router.post("/", async (req, res) => {
 
 });
 
+// TODO: /:id/solve
+// para depois enviar mensagem para solver
+
 router.put("/:id", (req, res) => {
     Secondary.findByIdAndUpdate(req.params.id, req.body, (err, result) => {
         if (err) {
