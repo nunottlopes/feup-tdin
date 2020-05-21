@@ -12,6 +12,9 @@ const io = require('socket.io')(server);
 io.on('connection', function(socket){
     // get that socket and listen to events
     console.log("Solver connected")
+    socket.on('disconnect', function(){
+        console.log("Solver disconnected")
+    })
 });
 
 app.use(express.json());

@@ -83,17 +83,12 @@ const Question = (props) => {
   const classes = useQuestionStyles();
 
   const [questions, setQuestions] = useState(null)
-  const [update, setUpdate] = useState(false)
-
-  ipcRenderer.on('secondary:sent', function(){
-    setUpdate(!update)
-  });
 
   useEffect(() => {
     ApiServices.getSecondayTickets(props.ticket._id, props.ticket.solver).then(response => {
       setQuestions(response.data)
     })
-  }, [props.ticket._id, props.ticket.solver, update])
+  }, [props.ticket._id, props.ticket.solver, props.update, props.answerEvent])
 
   return(
     <>
@@ -201,7 +196,7 @@ const TicketInfo = (props) => {
           <Typography className={classes.date} color="textSecondary">
             Submitted on: {new Date(ticket.createdAt).toUTCString()}
           </Typography>
-          <Question ticket={ticket} />
+          <Question answerEvent={props.answerEvent} update={props.update} ticket={ticket} />
           <Divider className={classes.divider}/>
           <TextField
             variant="outlined"
@@ -246,14 +241,11 @@ function Assigned(props) {
     open: false,
     message: ""
   });
-  const [update, setUpdate] = useState(false)
-  const socket = props.socket
 
-  socket.on("answer", data => {
-    if(data === props.name) {
-      setUpdate(!update)
-      setId(id)
-    }
+  const [update, setUpdate] = useState(false)
+
+  ipcRenderer.on('secondary:sent', function(){
+    setUpdate(!update)
   });
 
   useEffect(() => {
@@ -263,7 +255,7 @@ function Assigned(props) {
       response[2].data.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt))
       setRows([...response[0].data, ...response[1].data, ...response[2].data ])
     })
-  }, [props.name, id, update])
+  }, [props.name, id, props.answerEvent])
 
   return (
     <>
@@ -298,7 +290,7 @@ function Assigned(props) {
         </Snackbar>
         </>
       }
-      {id !== '' && <TicketInfo ticket={rows.find(x => x._id === id)} setId={setId} setSnackbarOpen={setSnackbarOpen}/>}
+      {id !== '' && <TicketInfo ticket={rows.find(x => x._id === id)} answerEvent={props.answerEvent} update={update} setId={setId} setSnackbarOpen={setSnackbarOpen}/>}
     </>
   );
 }
