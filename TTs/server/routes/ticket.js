@@ -54,13 +54,44 @@ router.put("/:id", (req, res) => {
     });
 });
 
+router.put("/:id/solve", (req, res) => {
+    const update = {
+        status: "solved",
+        response: req.body.response
+    };
 
-// TODO:
-// /:id/solve
-// pode ser igual ao findByIdAndUpdate e tem de se enviar o email
+    Ticket.findByIdAndUpdate(req.params.id, update, (err, result) => {
+        if (err) {
+            res.status(500).send(err);
+        } else {
+            res.status(200).send(result);
+        }
+    });
 
-// /:id/assign
-// tem de se fazer a verificação se o status está unassinged antes de deixar dar assign, penso que np mongoose dá mandar um where
+    //TODO: Send email
+});
+
+router.put("/:id/assign", (req, res) => {
+
+    const query = {
+        _id: req.params.id,
+        status: "unassigned"
+    }
+
+    const update = {
+        status: "assigned",
+        solver: req.body.solver
+    };
+
+    Ticket.findOneAndUpdate(query, update, (err, result) => {
+        if (err) {
+            res.status(500).send(err);
+        } else {
+            res.status(200).send(result);
+        }
+    });
+
+});
 
 router.get("/:id/secondary", (req, res) => {
     Secondary.find({ original: req.params.id }, (err, result) => {

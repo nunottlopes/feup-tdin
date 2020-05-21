@@ -1,7 +1,8 @@
 var express = require("express");
 var router = express.Router();
 const AmqpManager = require("../amqp/AmqpManager");
-const Secondary = require("../models/secondary")
+const Secondary = require("../models/secondary");
+const Ticket = require("../models/ticket");
 
 router.get("/:id", (req, res) => {
     Secondary.findById(req.params.id, (err, result) => {
@@ -37,7 +38,6 @@ router.post("/", async (req, res) => {
     // Saving it to the database.
     t.save((err, result) => {
         if (err) {
-            console.log(err)
             res.status(500).send(err);
         } else {
             res.status(201).send({
@@ -46,10 +46,50 @@ router.post("/", async (req, res) => {
         }
     });
 
+    Ticket.findByIdAndUpdate(req.body.original, { status: "waiting" }, (err, result) => {
+        if (err) {
+            console.log(err);
+        } else {
+            console.log(result._id + " status updated to WAITING");
+        }
+    });
+
 });
 
-// TODO: /:id/solve
-// para depois enviar mensagem para solver
+router.put("/:id/solve", (req, res) => {
+    const update = {
+        status: "solved",
+        response: req.body.response
+    };
+
+    Secondary.findByIdAndUpdate(req.params.id, update, async (err, result) => {
+        if (err) {
+            res.status(500).send(err);
+        } else {
+            res.status(200).send(result);
+            if (result && await isTicketSolved(result.original)) {
+                answeredOriginal(result.original)
+            }
+        }
+    });
+
+    //TODO: Notify solver
+});
+
+const isTicketSolved = async (id) => {
+    let tickets = await Secondary.find({ original: id });
+    return tickets.every(e => e.status === "solved");
+}
+
+const answeredOriginal = (id) => {
+    Ticket.findByIdAndUpdate(id, { status: "answered" }, (err, result) => {
+        if (err) {
+            console.log(err);
+        } else {
+            console.log(result._id + " status updated to ANSWERED");
+        }
+    });
+}
 
 router.put("/:id", (req, res) => {
     Secondary.findByIdAndUpdate(req.params.id, req.body, (err, result) => {
