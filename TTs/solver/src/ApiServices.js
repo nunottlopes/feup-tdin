@@ -25,19 +25,17 @@ const getSecondayTickets = async (ticket_id, solver) => {
 const assignTicket = async (solver, ticket_id) => {
   const body = {
     solver: solver,
-    status: 'assigned'
   }
 
-  return await axios.put(`${API_URL}/ticket/${ticket_id}`, body)
+  return await axios.put(`${API_URL}/ticket/${ticket_id}/assign`, body)
 }
 
 const solveTicket = async (response, ticket_id) => {
   const body = {
     response: response,
-    status: 'solved'
   }
 
-  return await axios.put(`${API_URL}/ticket/${ticket_id}`, body)
+  return await axios.put(`${API_URL}/ticket/${ticket_id}/solve`, body)
 }
 
 const createSecondaryTicket = async (ticket, department, question) => {
