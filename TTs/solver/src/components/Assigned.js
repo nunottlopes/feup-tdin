@@ -179,6 +179,10 @@ const TicketInfo = (props) => {
     })
   }
 
+  useState(() => {
+    console.log("update")
+  }, [props.ticket, props.update])
+
   return(
     <>
       <IconButton size="small" onClick={() => props.setId('')}>
@@ -246,6 +250,12 @@ function Assigned(props) {
     open: false,
     message: ""
   });
+  const [update, setUpdate] = useState(false)
+  const socket = props.socket
+
+  socket.on("answer", data => {
+    if(data === props.name) setUpdate(!update)
+  });
 
   useEffect(() => {
     ApiServices.getMyTickets(props.name).then(response => {
@@ -254,7 +264,7 @@ function Assigned(props) {
       response[2].data.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt))
       setRows([...response[0].data, ...response[1].data, ...response[2].data ])
     })
-  }, [props.name, id])
+  }, [props.name, id, update])
 
   return (
     <>
@@ -289,7 +299,7 @@ function Assigned(props) {
         </Snackbar>
         </>
       }
-      {id !== '' && <TicketInfo ticket={rows.find(x => x._id === id)} setId={setId} setSnackbarOpen={setSnackbarOpen}/>}
+      {id !== '' && <TicketInfo update={update} ticket={rows.find(x => x._id === id)} setId={setId} setSnackbarOpen={setSnackbarOpen}/>}
     </>
   );
 }

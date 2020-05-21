@@ -6,6 +6,14 @@ const mongoUrl = require("./config/config").mongodb.url;
 
 const app = express();
 
+const server = require('http').createServer(app);
+const io = require('socket.io')(server);
+
+io.on('connection', function(socket){
+    // get that socket and listen to events
+    console.log("Solver connected")
+});
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(
@@ -15,6 +23,10 @@ app.use(
         }
     })
 );
+app.use(function(request, response, next){
+    request.io = io;
+    next();
+});
 
 const indexRouter = require("./routes/index");
 const ticketRouter = require("./routes/ticket");
@@ -46,4 +58,4 @@ mongoose.connect(mongoUrl, {
     }
 });
 
-app.listen(PORT, () => console.log(`Server listening on port ${PORT}!`));
+server.listen(PORT, () => console.log(`Server listening on port ${PORT}!`));

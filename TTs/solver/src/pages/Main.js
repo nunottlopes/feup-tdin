@@ -10,6 +10,8 @@ import Tab from '@material-ui/core/Tab';
 import Assigned from "../components/Assigned";
 import Unassigned from "../components/Unassigned";
 
+import socketIOClient from "socket.io-client";
+
 const drawerWidth = 240;
 
 const {ipcRenderer} = window.require('electron');
@@ -40,6 +42,8 @@ const useStyles = makeStyles((theme) => ({
 function Main() {
   const classes = useStyles();
 
+  const socket = socketIOClient("http://localhost:3001");
+
   const [index, setIndex] = useState(0)
   const [name, setName] = useState("")
 
@@ -64,8 +68,8 @@ function Main() {
       <main className={classes.content}>
         <Toolbar />
         <Tabs />
-        {index === 0 && <Unassigned name={name}/>}
-        {index === 1 && <Assigned name={name}/>}
+        {index === 0 && <Unassigned socket={socket} name={name}/>}
+        {index === 1 && <Assigned socket={socket} name={name}/>}
       </main>
     </div>
   );

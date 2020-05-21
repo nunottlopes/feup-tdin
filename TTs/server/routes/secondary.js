@@ -77,10 +77,9 @@ router.put("/:id/solve", (req, res) => {
             if (result && await isTicketSolved(result.original)) {
                 answeredOriginal(result.original)
             }
+            req.io.emit('answer', result.solver);
         }
     });
-
-    //TODO: Notify solver
 });
 
 const isTicketSolved = async (id) => {

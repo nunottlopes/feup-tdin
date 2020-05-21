@@ -106,12 +106,23 @@ function Unassigned(props) {
 
   const [rows, setRows] = useState([])
   const [update, setUpdate] = useState(false)
+  const socket = props.socket
 
   const assignTicket = (ticket_id) => {
     ApiServices.assignTicket(props.name, ticket_id).then(response => {
       setUpdate(!update)
     })
   }
+
+  socket.on("assign", data => {
+    console.log("cena2s")
+    if(data !== props.name) setUpdate(!update)
+  });
+
+  socket.on("create", data => {
+    console.log("cenas")
+    setUpdate(!update)
+  });
 
   useEffect(() => {
     ApiServices.getUnassignedTickets().then(response => {

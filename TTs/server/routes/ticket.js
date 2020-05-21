@@ -40,6 +40,7 @@ router.post("/", (req, res) => {
             res.status(201).send({
                 id: result._id
             });
+            req.io.emit('create', null);
         }
     });
 
@@ -121,6 +122,7 @@ router.put("/:id/assign", (req, res) => {
             res.status(500).send(err);
         } else {
             res.status(200).send(result);
+            req.io.emit('assign', req.body.solver);
         }
     });
 
