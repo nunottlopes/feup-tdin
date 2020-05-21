@@ -24,10 +24,7 @@ router.get("/", (req, res) => {
     });
 });
 
-router.post("/", async (req, res) => {
-    const broker = await AmqpManager.getInstance();
-    await broker.send(req.body.department, Buffer.from(JSON.stringify(req.body)));
-
+router.post("/", (req, res) => {
     var t = new Secondary({
         original: req.body.original,
         question: req.body.question,
@@ -43,6 +40,7 @@ router.post("/", async (req, res) => {
             res.status(201).send({
                 id: result._id
             });
+            sendToQueue(result);
         }
     });
 
@@ -55,6 +53,15 @@ router.post("/", async (req, res) => {
     });
 
 });
+
+const sendToQueue = async (secondary) => {
+    const originalTicket = await Ticket.findById(secondary.original);
+
+    secondary.original = originalTicket;
+
+    const broker = await AmqpManager.getInstance();
+    await broker.send(secondary.department, Buffer.from(JSON.stringify(secondary)));
+}
 
 router.put("/:id/solve", (req, res) => {
     const update = {
