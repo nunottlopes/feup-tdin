@@ -179,10 +179,6 @@ const TicketInfo = (props) => {
     })
   }
 
-  useState(() => {
-    console.log("update")
-  }, [props.ticket, props.update])
-
   return(
     <>
       <IconButton size="small" onClick={() => props.setId('')}>
@@ -254,7 +250,10 @@ function Assigned(props) {
   const socket = props.socket
 
   socket.on("answer", data => {
-    if(data === props.name) setUpdate(!update)
+    if(data === props.name) {
+      setUpdate(!update)
+      setId(id)
+    }
   });
 
   useEffect(() => {
@@ -299,7 +298,7 @@ function Assigned(props) {
         </Snackbar>
         </>
       }
-      {id !== '' && <TicketInfo update={update} ticket={rows.find(x => x._id === id)} setId={setId} setSnackbarOpen={setSnackbarOpen}/>}
+      {id !== '' && <TicketInfo ticket={rows.find(x => x._id === id)} setId={setId} setSnackbarOpen={setSnackbarOpen}/>}
     </>
   );
 }
