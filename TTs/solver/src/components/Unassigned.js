@@ -104,7 +104,7 @@ function Row(props) {
 
 function Unassigned(props) {
 
-  const [rows, setRows] = useState(null)
+  const [rows, setRows] = useState([])
   const [update, setUpdate] = useState(false)
 
   const assignTicket = (ticket_id) => {
@@ -134,7 +134,7 @@ function Unassigned(props) {
           </TableRow>
         </TableHead>
         <TableBody>
-          {rows !== null && rows.map((row) => (
+          {rows.map((row) => (
             <Row key={row._id} row={row} assignTicket={assignTicket}/>
           ))}
         </TableBody>

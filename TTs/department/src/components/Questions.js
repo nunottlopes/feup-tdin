@@ -29,13 +29,13 @@ function Row(props) {
     <React.Fragment>
       <TableRow>
         <TableCell component="th" scope="row">
-          {row.title}
+          {row.question}
         </TableCell>
-        <TableCell align="center">{row.name}</TableCell>
+        <TableCell align="center">{row.solver}</TableCell>
         <TableCell align="center">{new Date(row.createdAt).toLocaleDateString()}</TableCell>
         <TableCell align="center">{row.status}</TableCell>
         <TableCell align="center">
-          <Tooltip title="Open ticket" aria-label="add">
+          <Tooltip title="Open question" aria-label="add">
             <IconButton onClick={() => props.setId(row._id)}>
               <LaunchIcon color="primary" />
             </IconButton>
@@ -44,80 +44,6 @@ function Row(props) {
       </TableRow>
     </React.Fragment>
   );
-}
-
-
-const useQuestionStyles = makeStyles({
-  divider: {
-    margin: '20px 0'
-  },
-  root: {
-    minWidth: 275,
-    marginBottom: 15,
-  },
-  bullet: {
-    display: 'inline-block',
-    margin: '0 2px',
-    transform: 'scale(0.8)',
-  },
-  department: {
-    fontSize: 12,
-  },
-  date: {
-    fontSize: 10,
-    marginTop: 10,
-  },
-  cardcontent: {
-    "&:last-child": {
-      paddingBottom: 16
-    }
-  },
-  response: {
-    paddingTop: 7
-  }
-});
-
-const Question = (props) => {
-  const classes = useQuestionStyles();
-
-  const [questions, setQuestions] = useState(null)
-  const [update, setUpdate] = useState(false)
-
-  ipcRenderer.on('secondary:sent', function(){
-    setUpdate(!update)
-  });
-
-  useEffect(() => {
-    ApiServices.getSecondayTickets(props.ticket._id, props.ticket.solver).then(response => {
-      setQuestions(response.data)
-    })
-  }, [props.ticket._id, props.ticket.solver, update])
-
-  return(
-    <>
-      {questions !== null && questions.length > 0 &&
-        <Divider className={classes.divider}/>
-      }
-      {questions !== null && questions.map((question) => (
-        <Card key={question._id} className={classes.root}>
-          <CardContent className={classes.cardcontent}>
-            <Typography className={classes.department} color="textSecondary" gutterBottom>
-              Question to department {question.department}
-            </Typography>
-            <Typography variant="h6" component="h4">
-              {question.question}
-            </Typography>
-            <Typography className={classes.response} variant="body2" component="p">
-              {question.response}
-            </Typography>
-            <Typography className={classes.date} color="textSecondary">
-              Last updated: {new Date(question.updatedAt).toUTCString()}
-            </Typography>
-          </CardContent>
-        </Card>
-      ))}
-    </>
-  )
 }
 
 const useTicketStyles = makeStyles({
@@ -156,21 +82,19 @@ const useTicketStyles = makeStyles({
   }
 });
 
-const TicketInfo = (props) => {
+const QuestionInfo = (props) => {
 
   const classes = useTicketStyles();
-  const ticket = props.ticket;
-  const [response, setResponse] = useState('');
+  const ticket = props.question.original;
+  const question = props.question;
+  const [answer, setAnswer] = useState('');
 
-  const handleSecondary = () => {
-    ipcRenderer.send('secondary', ticket);
-  }
-
-  const solveTicket = () => {
-    ApiServices.solveTicket(response, ticket._id).then(response => {
-      alert("Ticket solved!")
+  const answerQuestion = () => {
+    ApiServices.solveSecondayQuestion(question._id, answer).then(response => {
+      window.localStorage.removeItem(`${props.name}|${question._id}`)
       props.setId('')
     })
+    console.log("Answer question")
   }
 
   return(
@@ -195,56 +119,79 @@ const TicketInfo = (props) => {
           <Typography className={classes.date} color="textSecondary">
             Submitted on: {new Date(ticket.createdAt).toUTCString()}
           </Typography>
-          <Question ticket={ticket} />
           <Divider className={classes.divider}/>
-          <TextField
-            variant="outlined"
-            fullWidth
-            id="response"
-            label="Response"
-            name="response"
-            autoComplete="response"
-            value={response}
-            onChange={(event) => setResponse(event.target.value)}
-            autoFocus
-            multiline
-            rows={2}
-            rowsMax={4}
-            InputProps={{
-              classes: {
-                input: classes.resize,
-              },
-            }}
-          />
-          <div className={classes.submit}>
-            <Box m={2} >
-              <Button variant="outlined" color="primary" onClick={solveTicket}>
-                Solve ticket
-              </Button>
-            </Box>
-            <Box t={2} >
-              <Button size="small" onClick={handleSecondary}>Create secondary question</Button>
-            </Box>
-          </div>
+          <Card key={question._id} className={classes.root}>
+            <CardContent className={classes.cardcontent}>
+              <Typography className={classes.department} color="textSecondary" gutterBottom>
+                Solver {question.solver} question:
+              </Typography>
+              <Typography variant="h6" component="h4">
+                {question.question}
+              </Typography>
+              <Typography className={classes.response} variant="body2" component="p">
+                {question.response}
+              </Typography>
+              <Typography className={classes.date} color="textSecondary">
+              Submitted on: {new Date(question.createdAt).toUTCString()}
+              </Typography>
+              <Divider className={classes.divider}/>
+              <TextField
+                variant="outlined"
+                fullWidth
+                id="answer"
+                label="Answer"
+                name="answer"
+                autoComplete="answer"
+                value={answer}
+                onChange={(event) => setAnswer(event.target.value)}
+                autoFocus
+                multiline
+                rows={2}
+                rowsMax={4}
+                InputProps={{
+                  classes: {
+                    input: classes.resize,
+                  },
+                }}
+              />
+              <div className={classes.submit}>
+                <Box m={2} >
+                  <Button variant="outlined" color="primary" onClick={answerQuestion}>
+                    Answer question
+                  </Button>
+                </Box>
+              </div>
+            </CardContent>
+          </Card>
         </CardContent>
       </Card>
     </>
   )
 }
 
-function Assigned(props) {
+function Questions(props) {
 
   const [id, setId] = useState('')
   const [rows, setRows] = useState([])
 
   useEffect(() => {
-    ApiServices.getMyTickets(props.name).then(response => {
-      response[0].data.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt))
-      response[1].data.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt))
-      response[2].data.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt))
-      setRows([...response[0].data, ...response[1].data, ...response[2].data ])
-    })
+    // window.localStorage.clear()
+    let values = []
+    const keys = Object.keys(window.localStorage)
+    let i = keys.length
+    while ( i-- ) {
+      const departmentName = keys[i].split("|")[0];
+      if(departmentName === props.name)
+        values.push(JSON.parse(window.localStorage.getItem(keys[i])));
+    }
+    setRows(values)
   }, [props.name, id])
+
+  ipcRenderer.on('queue', function(e, item){
+    const parsedItem = JSON.parse(item)
+    setRows([...rows, parsedItem])
+    window.localStorage.setItem(`${props.name}|${parsedItem._id}`, item);
+  });
 
   return (
     <>
@@ -253,8 +200,8 @@ function Assigned(props) {
           <Table aria-label="collapsible table">
             <TableHead>
               <TableRow>
-                <TableCell><Typography style={{ fontWeight: 'bold' }}>Title</Typography></TableCell>
-                <TableCell align="center"><Typography style={{ fontWeight: 'bold' }}>Author</Typography></TableCell>
+                <TableCell><Typography style={{ fontWeight: 'bold' }}>Question</Typography></TableCell>
+                <TableCell align="center"><Typography style={{ fontWeight: 'bold' }}>Solver</Typography></TableCell>
                 <TableCell align="center"><Typography style={{ fontWeight: 'bold' }}>Date</Typography></TableCell>
                 <TableCell align="center"><Typography style={{ fontWeight: 'bold' }}>Status</Typography></TableCell>
                 <TableCell />
@@ -268,9 +215,9 @@ function Assigned(props) {
           </Table>
         </TableContainer>
       }
-      {id !== '' && <TicketInfo ticket={rows.find(x => x._id === id)} setId={setId}/>}
+      {id !== '' && <QuestionInfo name={props.name} question={rows.find(x => x._id === id)} setId={setId}/>}
     </>
   );
 }
 
-export default Assigned;
+export default Questions;

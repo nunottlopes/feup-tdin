@@ -1,7 +1,6 @@
 {
-  "name": "cra-electron",
-  "description": "CRA + Electron sitting in a tree",
-  "author": "Kitze",
+  "name": "solver",
+  "description": "React + Electron",
   "version": "0.2.7",
   "private": true,
   "dependencies": {
@@ -23,11 +22,6 @@
     "prettier": "^1.4.4",
     "react-scripts": "3.1.2",
     "wait-on": "3.3.0"
-  },
-  "build": {
-    "publish": {
-      "provider": "github"
-    }
   },
   "main": "public/electron.js",
   "homepage": "./",
