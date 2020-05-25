@@ -62,14 +62,22 @@ router.put("/:id/solve", (req, res) => {
         response: req.body.response
     };
 
-    Ticket.findByIdAndUpdate(req.params.id, update, { new: true }, (err, result) => {
+    Ticket.findById(req.params.id, (err, result) => {
         if (err) {
             res.status(500).send(err);
+        } else if (result && (result.status === "assigned" || result.status === "answered")) {
+            Ticket.findByIdAndUpdate(req.params.id, update, { new: true }, (err, result) => {
+                if (err) {
+                    res.status(500).send(err);
+                } else {
+                    res.status(200).send(result);
+                    sendEmail(result);
+                }
+            });
         } else {
-            res.status(200).send(result);
-            sendEmail(result);
+            res.status(400).send("Unable to solve ticket")
         }
-    });
+    })
 });
 
 const sendEmail = (ticket) => {

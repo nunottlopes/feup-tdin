@@ -22,7 +22,7 @@ import Snackbar from '@material-ui/core/Snackbar';
 import { Alert } from "@material-ui/lab"
 import { ApiServices } from "../ApiServices";
 
-const {ipcRenderer} = window.require('electron');
+const { ipcRenderer } = window.require('electron');
 
 function Row(props) {
   const { row } = props;
@@ -90,10 +90,10 @@ const Question = (props) => {
     })
   }, [props.ticket._id, props.ticket.solver, props.update, props.answerEvent])
 
-  return(
+  return (
     <>
       {questions !== null && questions.length > 0 &&
-        <Divider className={classes.divider}/>
+        <Divider className={classes.divider} />
       }
       {questions !== null && questions.map((question) => (
         <Card key={question._id} className={classes.root}>
@@ -142,7 +142,7 @@ const useTicketStyles = makeStyles({
     fontSize: 14
   },
   submit: {
-    display:'flex',
+    display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
     justifyContent: 'center'
@@ -164,17 +164,25 @@ const TicketInfo = (props) => {
   }
 
   const solveTicket = () => {
-    if(response.trim() === "") return;
+    if (response.trim() === "") return;
     ApiServices.solveTicket(response, ticket._id).then(response => {
       props.setId('')
       props.setSnackbarOpen({
         open: true,
-        message: "Ticket solved!"
+        message: "Ticket solved!",
+        severity: "success"
       })
-    })
+    }).catch(error => {
+      // props.setId('')
+      props.setSnackbarOpen({
+        open: true,
+        message: "Unable to solve ticket!",
+        severity: "error"
+      })
+    });
   }
 
-  return(
+  return (
     <>
       <IconButton size="small" onClick={() => props.setId('')}>
         <KeyboardArrowLeftIcon />
@@ -197,7 +205,7 @@ const TicketInfo = (props) => {
             Submitted on: {new Date(ticket.createdAt).toUTCString()}
           </Typography>
           <Question answerEvent={props.answerEvent} update={props.update} ticket={ticket} />
-          <Divider className={classes.divider}/>
+          <Divider className={classes.divider} />
           <TextField
             variant="outlined"
             fullWidth
@@ -239,12 +247,13 @@ function Assigned(props) {
   const [rows, setRows] = useState([])
   const [snackbarOpen, setSnackbarOpen] = useState({
     open: false,
-    message: ""
+    message: "",
+    severity: "success"
   });
 
   const [update, setUpdate] = useState(false)
 
-  ipcRenderer.on('secondary:sent', function(){
+  ipcRenderer.on('secondary:sent', function () {
     setUpdate(!update)
   });
 
@@ -253,44 +262,44 @@ function Assigned(props) {
       response[0].data.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt))
       response[1].data.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt))
       response[2].data.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt))
-      setRows([...response[0].data, ...response[1].data, ...response[2].data ])
+      setRows([...response[0].data, ...response[1].data, ...response[2].data])
     })
   }, [props.name, id, props.answerEvent])
 
   return (
     <>
       {id === '' &&
-      <>
-        <TableContainer component={Paper}>
-          <Table aria-label="collapsible table">
-            <TableHead>
-              <TableRow>
-                <TableCell><Typography style={{ fontWeight: 'bold' }}>Title</Typography></TableCell>
-                <TableCell align="center"><Typography style={{ fontWeight: 'bold' }}>Author</Typography></TableCell>
-                <TableCell align="center"><Typography style={{ fontWeight: 'bold' }}>Date</Typography></TableCell>
-                <TableCell align="center"><Typography style={{ fontWeight: 'bold' }}>Status</Typography></TableCell>
-                <TableCell />
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {rows.map((row) => (
-                <Row key={row._id} row={row} setId={setId}/>
-              ))}
-            </TableBody>
-          </Table>
-        </TableContainer>
-        <Snackbar
-          open={snackbarOpen.open}
-          autoHideDuration={6000}
-          onClose={() => setSnackbarOpen({ open: false })}
-        >
-          <Alert onClose={() => setSnackbarOpen({ open: false })}>
+        <>
+          <TableContainer component={Paper}>
+            <Table aria-label="collapsible table">
+              <TableHead>
+                <TableRow>
+                  <TableCell><Typography style={{ fontWeight: 'bold' }}>Title</Typography></TableCell>
+                  <TableCell align="center"><Typography style={{ fontWeight: 'bold' }}>Author</Typography></TableCell>
+                  <TableCell align="center"><Typography style={{ fontWeight: 'bold' }}>Date</Typography></TableCell>
+                  <TableCell align="center"><Typography style={{ fontWeight: 'bold' }}>Status</Typography></TableCell>
+                  <TableCell />
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {rows.map((row) => (
+                  <Row key={row._id} row={row} setId={setId} />
+                ))}
+              </TableBody>
+            </Table>
+          </TableContainer>
+          <Snackbar
+            open={snackbarOpen.open}
+            autoHideDuration={6000}
+            onClose={() => setSnackbarOpen({ open: false })}
+          >
+            <Alert onClose={() => setSnackbarOpen({ open: false })} severity={snackbarOpen.severity}>
               {snackbarOpen.message}
-          </Alert>
-        </Snackbar>
+            </Alert>
+          </Snackbar>
         </>
       }
-      {id !== '' && <TicketInfo ticket={rows.find(x => x._id === id)} answerEvent={props.answerEvent} update={update} setId={setId} setSnackbarOpen={setSnackbarOpen}/>}
+      {id !== '' && <TicketInfo ticket={rows.find(x => x._id === id)} answerEvent={props.answerEvent} update={update} setId={setId} setSnackbarOpen={setSnackbarOpen} />}
     </>
   );
 }
