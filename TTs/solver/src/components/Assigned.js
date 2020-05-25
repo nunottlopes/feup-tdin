@@ -173,7 +173,6 @@ const TicketInfo = (props) => {
         severity: "success"
       })
     }).catch(error => {
-      // props.setId('')
       props.setSnackbarOpen({
         open: true,
         message: "Unable to solve ticket!",
@@ -288,18 +287,18 @@ function Assigned(props) {
               </TableBody>
             </Table>
           </TableContainer>
-          <Snackbar
-            open={snackbarOpen.open}
-            autoHideDuration={6000}
-            onClose={() => setSnackbarOpen({ open: false })}
-          >
-            <Alert onClose={() => setSnackbarOpen({ open: false })} severity={snackbarOpen.severity}>
-              {snackbarOpen.message}
-            </Alert>
-          </Snackbar>
         </>
       }
       {id !== '' && <TicketInfo ticket={rows.find(x => x._id === id)} answerEvent={props.answerEvent} update={update} setId={setId} setSnackbarOpen={setSnackbarOpen} />}
+      <Snackbar
+        open={snackbarOpen.open}
+        autoHideDuration={6000}
+        onClose={() => setSnackbarOpen({ open: false })}
+      >
+        <Alert onClose={() => setSnackbarOpen({ open: false })} severity={snackbarOpen.severity}>
+          {snackbarOpen.message}
+        </Alert>
+      </Snackbar>
     </>
   );
 }
