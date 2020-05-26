@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { makeStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -39,9 +39,12 @@ function Main() {
 
   const [name, setName] = useState("")
 
-  ipcRenderer.on('login', function(e, item){
-    setName(item)
-  });
+  useEffect(() => {
+    ipcRenderer.on('login', function(e, item){
+      setName(item)
+      console.log("SET NAME: ", item)
+    });
+  }, [])
 
   return (
     <div className={classes.root}>

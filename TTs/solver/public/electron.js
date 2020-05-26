@@ -7,11 +7,6 @@ let mainWindow = null;
 let loginWindow = null;
 let secondaryWindow = null;
 
-// require("update-electron-app")({
-//   repo: "kitze/react-electron-example",
-//   updateInterval: "1 hour"
-// });
-
 function createMainWindow() {
   mainWindow = new BrowserWindow({
     width: 1100,

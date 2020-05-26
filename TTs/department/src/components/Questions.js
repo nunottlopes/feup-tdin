@@ -184,6 +184,8 @@ function Questions(props) {
       if(departmentName === props.name)
         values.push(JSON.parse(window.localStorage.getItem(keys[i])));
     }
+    console.log("UPDATE")
+    console.log(values)
     setRows(values)
   }, [props.name, id])
 

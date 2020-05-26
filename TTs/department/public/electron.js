@@ -7,11 +7,6 @@ const AmqpManager = require("./amqp/AmqpManager");
 let mainWindow = null;
 let loginWindow = null;
 
-// require("update-electron-app")({
-//   repo: "kitze/react-electron-example",
-//   updateInterval: "1 hour"
-// });
-
 function createMainWindow() {
   mainWindow = new BrowserWindow({
     width: 1100,
